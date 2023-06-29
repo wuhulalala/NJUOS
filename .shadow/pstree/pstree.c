@@ -29,7 +29,7 @@
 #define LENGTH 1
 #define INDEX 0
 
-#define SIZEOF_NODE sizeof(node)
+#define SIZEOF_INT 4
 const struct option longopts[] = {
   {"show-pids", no_argument, NULL, 'p'},
   {"numeric-sort", required_argument, NULL, 'n'},
@@ -55,6 +55,7 @@ typedef struct pro_info {
 
 typedef struct node
 {
+  int vertex[INITIAL_TREE_WIDTH];
   char name[MAX_PROCESS_NAME];
   int pid;
 
@@ -68,13 +69,14 @@ size_t get_process_data(pro_info **pros);
 
 void free_processes(pro_info **pros, size_t counts);
 
-void build_pstree(pro_info **pros, size_t counts, node *graph[]); 
+void build_pstree(pro_info **pros, size_t counts, int *graph[]); 
+  //to do
 
-void print_tree(node *graph[], size_t *current_count, size_t counts, int id, int real_count, int mask_count, int real_len, int mask_len, int last_space_len, int flag);
+void print_tree(pro_info **pros, size_t counts);
 
-void initial_tree(node *graph[], size_t counts, pro_info **pros);
+void initial_tree(int *graph[]);
 
-void free_tree(node *graph[], pro_info **info, size_t counts);
+void free_tree(int *graph[]);
 int main(int argc, char *argv[]) {
   //for (int i = 0; i < argc; i++) {
     //assert(argv[i]);
@@ -83,7 +85,7 @@ int main(int argc, char *argv[]) {
   //assert(!argv[argc]);
   Arguments arg;
   pro_info *processes[INITIAL_MAX_PROCESS_NUM];
-  node *graph[INITIAL_MAX_PROCESS_NUM];
+  int *graph[INITIAL_MAX_PROCESS_NUM];
   
   get_arguments(argc, argv, &arg);
   //printf("%ds SHOW_PIDS\n%ds NUMERIC_SORT argument is %s\n%ds VERSION\n", 
@@ -93,99 +95,62 @@ int main(int argc, char *argv[]) {
 
 
   // use unix tools to get the information about pid(the message is stored at file /proc/[pid]/stat), storing the info in a temp file data
-  system("find /proc/ -maxdepth 2 -mindepth 2 -type f -name \"stat\" | xargs -d '\n' awk '{print $1, $2, $4, $20}' 2>&1 \
+  system("find /proc/ -maxdepth 2 -mindepth 2 -type f -name \"stat\" | xargs -d '\n' awk '{print $1, $2, $4, $20, $22}' 2>&1 \
               | grep -v No | sed 's/^\\([^()]*\\) (\\(.*\\)) \\(.*\\)$/\\1 \\2 \\3/' > data");
 
   size_t counts = get_process_data(processes);
-  for (size_t i = 0; i < counts; i += 1) {
-    printf("pid is %d, ppid is %d, process name is %s, number of threads: %d, fork time: %s\n", 
-          processes[i] -> pid, processes[i] -> ppid, processes[i]->name, 
-          processes[i] -> threads, processes[i] -> fork_time);
-  }
-  size_t current_count = 0;
-  initial_tree(graph, counts, processes);
+  //for (size_t i = 0; i < counts; i += 1) {
+    //printf("pid is %d, ppid is %d, process name is %s, number of threads: %d, fork time: %s\n", 
+          //processes[i] -> pid, processes[i] -> ppid, processes[i]->name, 
+          //processes[i] -> threads, processes[i] -> fork_time);
+  //}
+  initial_tree(graph);
   build_pstree(processes, counts, graph);
-  print_tree(graph, &current_count, counts, 1, -1, 0, 0, strlen(graph[1][INDEX].name), 0, 0);
-  free_tree(graph, processes, counts);
   free_processes(processes, counts);
+  free_tree(graph);
   system("rm data");
   return 0;
 }
 
 
 
-void initial_tree(node *graph[], size_t counts, pro_info **pros) {
-  for (size_t i = 0; i < counts; i += 1) {
-    int pid = pros[i] -> pid;
-    graph[pid] = (node *) malloc(INITIAL_LENGTH * SIZEOF_NODE);
-    graph[pid][INDEX].pid = 2;
-    strcpy(graph[pid][INDEX].name, pros[i] -> name);
-    graph[pid][LENGTH].pid = INITIAL_LENGTH;
+void initial_tree(int *graph[]) {
+  for (size_t i = 0; i < INITIAL_MAX_PROCESS_NUM; i += 1) {
+    graph[i] = (int *) malloc(INITIAL_LENGTH * sizeof(int));
+    graph[i][INDEX] = 2;
+    graph[i][LENGTH] = INITIAL_LENGTH;
   }
 }
 
 
-void print_tree(node *graph[], size_t *current_count, size_t counts, int id, int real_count, int mask_count, int real_len, int mask_len, int last_space_len, int flag) {
-  if (*current_count <= counts) {
-    size_t num = graph[id][INDEX].pid;
-    *current_count = *current_count + 1;
-    if (num > 3) {
-      printf("%s----", graph[id][INDEX].name);
-      real_count = mask_count;
-      real_len = mask_len;
-    } else if (num == 2) {
-      printf("%s\n", graph[id][INDEX].name);
-      if (*current_count < counts) {
-        if (flag) {
-          for (int i = 0; i < 4 * real_count + 2 + real_len; i += 1) {
-            printf(" ");
-          } 
-          printf("--");
-        } else {
-          for (int i = 0; i < last_space_len; i += 1) {
-            printf(" ");
-          } 
-          printf("--");
-        }
-      }
-    } else {
-      printf("%s----", graph[id][INDEX].name);
-    }
 
-    for (size_t i = 2; i < num; i += 1) {
-      int id_next = graph[id][i].pid;
-      int len = strlen(graph[id_next][INDEX].name);
-      if (i == num - 1) 
-        print_tree(graph, current_count, counts, id_next, real_count, mask_count + 1, real_len, mask_len + len, 4 * real_count + 2 + real_len, 1);
-      else 
-        print_tree(graph, current_count, counts, id_next, real_count, mask_count + 1, real_len, mask_len + len, 4 * real_count + 2 + real_len, 0);
 
-    }
+void print_dash(int count) {
+  printf("----");
+}
 
-  }
+void print_pipe() {
+  //to do
 }
 
 
-void build_pstree(pro_info **pros, size_t counts, node *graph[]) {
+
+
+void build_pstree(pro_info **pros, size_t counts, int *graph[]) {
   for (size_t i = 0; i < counts; i += 1) {
     int pid = pros[i] -> pid;
-    if (pid == 1) {
-      continue;
-    }
     int ppid = pros[i] -> ppid;
-    int index = graph[ppid][INDEX].pid;
-    if (index < graph[ppid][LENGTH].pid) {
-      graph[ppid][index].pid = pid;
-      strcpy(graph[ppid][index].name, pros[i] -> name);
+    int index = graph[ppid][INDEX];
+    if (index < graph[ppid][LENGTH]) {
+      graph[ppid][index] = pid;
       index += 1;
-      graph[ppid][INDEX].pid = index;
+      graph[ppid][INDEX] = index;
     } else {
-      node *temp = (node *) malloc(graph[ppid][LENGTH].pid * SIZEOF_NODE);
-      size_t size = graph[ppid][LENGTH].pid * SIZEOF_NODE;
+      int *temp = (int *) malloc(graph[ppid][LENGTH] * SIZEOF_INT);
+      size_t size = graph[ppid][LENGTH] * SIZEOF_INT;
       memmove(temp, graph[ppid], size);
-      graph[ppid] = (node *) realloc(graph[ppid], graph[ppid][LENGTH].pid * FACTOR * SIZEOF_NODE);
+      graph[ppid] = (int *) realloc(graph[ppid], graph[ppid][LENGTH] * FACTOR * SIZEOF_INT);
       memmove(graph[ppid], temp, size);
-      graph[ppid][LENGTH].pid = graph[ppid][LENGTH].pid * 2;
       i -= 1;
       free(temp);
       continue;
@@ -195,10 +160,9 @@ void build_pstree(pro_info **pros, size_t counts, node *graph[]) {
 }
 
 
-void free_tree(node *graph[], pro_info **pros, size_t counts) {
-  for (size_t i = 0; i < counts; i += 1) {
-    int pid = pros[i] -> pid;
-    free(graph[pid]);
+void free_tree(int *graph[]) {
+  for (size_t i = 0; i < INITIAL_MAX_PROCESS_NUM; i += 1) {
+    free(graph[i]);
   }
 }
 
