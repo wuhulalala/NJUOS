@@ -60,8 +60,8 @@ void splash() {
 
 // Operating system is a C program!
 int main(const char *args) {
-  printInstructionAddress();
-  while(1);
+  while(1)
+    printInstructionAddress();
   ioe_init();
 
   puts("mainargs = \"");
