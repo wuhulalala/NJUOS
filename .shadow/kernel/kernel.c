@@ -61,18 +61,16 @@ void splash() {
 // Operating system is a C program!
 int main(const char *args) {
   ioe_init();
-  while(1)
-    printInstructionAddress();
 
   puts("mainargs = \"");
   puts(args);  // make run mainargs=xxx
   puts("\"\n");
 
-  //splash();
+  splash();
 
-  puts("Press any key to see its key code...\n");
-  while (1) {
-    print_key();
-  }
+  //puts("Press any key to see its key code...\n");
+  //while (1) {
+    //print_key();
+  //}
   return 0;
 }
