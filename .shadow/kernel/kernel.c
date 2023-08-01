@@ -22,14 +22,10 @@ void print_key() {
     puts("Key pressed: ");
     puts(key_names[event.keycode]);
     puts("\n");
+    if (event.keycode == 1) halt(0);
   }
 }
 
-void printInstructionAddress() {
-    void* address;
-    asm volatile ("call . + 0" : "=r" (address));
-    puts(address);
-}
 
 static void draw_tile(int x, int y, int w, int h, uint32_t color) {
   uint32_t pixels[w * h]; // WARNING: large stack-allocated memory
@@ -68,9 +64,9 @@ int main(const char *args) {
 
   splash();
 
-  //puts("Press any key to see its key code...\n");
-  //while (1) {
-    //print_key();
-  //}
+  puts("Press any key to see its key code...\n");
+  while (1) {
+    print_key();
+  }
   return 0;
 }
