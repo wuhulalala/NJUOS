@@ -25,6 +25,12 @@ void print_key() {
   }
 }
 
+void printInstructionAddress() {
+    void* address;
+    asm volatile ("call . + 0" : "=r" (address));
+    puts(address);
+}
+
 static void draw_tile(int x, int y, int w, int h, uint32_t color) {
   uint32_t pixels[w * h]; // WARNING: large stack-allocated memory
   AM_GPU_FBDRAW_T event = {
@@ -54,6 +60,7 @@ void splash() {
 
 // Operating system is a C program!
 int main(const char *args) {
+  printInstructionAddress();
   ioe_init();
 
   puts("mainargs = \"");
