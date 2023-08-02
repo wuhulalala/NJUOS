@@ -10,7 +10,7 @@
 
 #define IMG_WIDTH 512
 #define IMG_HEIGHT 512
-//static int w, h;  // Screen size
+static int w, h;  // Screen size
 
 #define RGB2COLOR(R, G, B) (((R) << 16) | ((G) << 8) | (B))
 #define KEYNAME(key) \
@@ -33,17 +33,17 @@ void print_key() {
 }
 
 
-//static void draw_tile(int x, int y, int w, int h, uint32_t color[]) {
-  //uint32_t pixels[w * h]; // WARNING: large stack-allocated memory
-  //AM_GPU_FBDRAW_T event = {
-    //.x = x, .y = y, .w = w, .h = h, .sync = 1,
-    //.pixels = pixels,
-  //};
-  //for (int i = 0; i < w * h; i++) {
-    //pixels[i] = color[i];
-  //}
-  //ioe_write(AM_GPU_FBDRAW, &event);
-//}
+static void draw_tile(int x, int y, int w, int h, uint32_t color) {
+  uint32_t pixels[w * h]; // WARNING: large stack-allocated memory
+  AM_GPU_FBDRAW_T event = {
+    .x = x, .y = y, .w = w, .h = h, .sync = 1,
+    .pixels = pixels,
+  };
+  for (int i = 0; i < w * h; i++) {
+    pixels[i] = color;
+  }
+  ioe_write(AM_GPU_FBDRAW, &event);
+}
 
 //static uint32_t get_pixel(int x, int y) {
   //int position = (y * IMG_WIDTH + x) * 3;
@@ -67,29 +67,20 @@ void print_key() {
   //return tile;
 //}
 
-//void splash() {
-  //AM_GPU_CONFIG_T info = {0};
-  //ioe_read(AM_GPU_CONFIG, &info);
-  //w = info.width;
-  //h = info.height;
-  //uint32_t pixels[w * h];
-  //AM_GPU_FBDRAW_T event = {
-    //.x = 0, .y = 0, .w = w, .h = h, .sync = 1,
-    //.pixels = pixels,
-  //};
-  //for (int x = 0; x < w; x += 1) {
-    //for (int y = 0; y < h; y += 1) {
-      //int srcx = (int)(x * (IMG_WIDTH / w));
-      //int srcy = (int)(y * (IMG_HEIGHT / h));
-      //pixels[x + y * w] = get_pixel(srcx, srcy);
-    //}
-  //}
+void splash() {
+  AM_GPU_CONFIG_T info = {0};
+  ioe_read(AM_GPU_CONFIG, &info);
+  w = info.width;
+  h = info.height;
 
-  //ioe_write(AM_GPU_FBDRAW, &event);
-
-
-
-//}
+  for (int x = 0; x * SIDE <= w; x ++) {
+    for (int y = 0; y * SIDE <= h; y++) {
+      if ((x & 1) ^ (y & 1)) {
+        draw_tile(x * SIDE, y * SIDE, SIDE, SIDE, 0xffffff); // white
+      }
+    }
+  }
+}
 
 // Operating system is a C program!
 int main(const char *args) {
