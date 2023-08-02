@@ -105,7 +105,11 @@ int main(int argc, char *argv[]) {
   size_t current_count = 0;
   initial_tree(graph, counts, processes);
   build_pstree(processes, counts, graph);
-  print_tree(graph, &current_count, counts, 1, -1, 0, 0, strlen(graph[1][INDEX].name), 0, 0);
+  if (arg.VERSION) {
+    fprintf(stderr, "pstree: version 1.0\n");
+  } else {
+    print_tree(graph, &current_count, counts, 1, -1, 0, 0, strlen(graph[1][INDEX].name), 0, 0);
+  }
   free_tree(graph, processes, counts);
   free_processes(processes, counts);
   system("rm data");
