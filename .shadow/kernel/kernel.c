@@ -151,7 +151,7 @@ unsigned char capybara_ppm[] = {
   0xc9, 0x9c, 0x83, 0xc8, 0x9d, 0x84, 0xc8, 0x9d, 0x86, 0xca, 0x9f, 0x86,
   0xc9, 0x9d, 0x84, 0xc9, 0x9f, 0x86, 0xc7, 0x9c, 0x84, 0xc4, 0x98, 0x81,
 };
-#define SIDE 16
+#define SIDE 10
 
 #define IMG_WIDTH 512
 #define IMG_HEIGHT 512
@@ -198,14 +198,14 @@ void print_key() {
   //ioe_write(AM_GPU_FBDRAW, &event);
 //}
 
-//static uint32_t get_pixel(int x, int y) {
-  //int position = (y * IMG_WIDTH + x) * 3;
-  //uint32_t R, G, B;
-  //R = (uint32_t)capybara_ppm[position];
-  //G = (uint32_t)capybara_ppm[position + 1];
-  //B = (uint32_t)capybara_ppm[position + 2];
-  //return RGB2COLOR(R, G, B);
-//}
+static uint32_t get_pixel(int x, int y) {
+  int position = (y * IMG_WIDTH + x) * 3;
+  uint32_t R, G, B;
+  R = (uint32_t)capybara_ppm[position];
+  G = (uint32_t)capybara_ppm[position + 1];
+  B = (uint32_t)capybara_ppm[position + 2];
+  return RGB2COLOR(R, G, B);
+}
 
 //static uint32_t * get_tile(unsigned char img[], int x, int y) {
   //uint32_t tile[SIDE * SIDE];
@@ -227,9 +227,17 @@ void splash() {
   h = info.height;
   puts("hello world\n");
   char str[128];
-  //uint32_t test = get_pixel(0, 1);
-  num2str(h, str);
+  uint32_t test = get_pixel(511, 0);
+  num2str(test, str);
   puts(str);
+  //char pixels[w * SIDE];
+  //for (size_t i = 0; i < h / SIDE; i += 1) {
+    //for (size_t x = 0; x < w; x += 1) {
+      //for (size_t y = i * SIDE; y < i * SIDE + SIDE; y += 1) {
+
+      //}
+    //}
+  //}
 }
 
 // Operating system is a C program!
