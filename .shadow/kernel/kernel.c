@@ -155,7 +155,10 @@ unsigned char capybara_ppm[] = {
 
 #define IMG_WIDTH 512
 #define IMG_HEIGHT 512
+
 static int w, h;  // Screen size
+
+#define ROUND(x) ((int)(x))
 
 #define RGB2COLOR(R, G, B) (((R) << 16) | ((G) << 8) | (B))
 #define KEYNAME(key) \
@@ -186,17 +189,17 @@ void print_key() {
 }
 
 
-//static void draw_tile(int x, int y, int w, int h, uint32_t color) {
-  //uint32_t pixels[w * h]; // WARNING: large stack-allocated memory
-  //AM_GPU_FBDRAW_T event = {
-    //.x = x, .y = y, .w = w, .h = h, .sync = 1,
-    //.pixels = pixels,
-  //};
-  //for (int i = 0; i < w * h; i++) {
-    //pixels[i] = color;
-  //}
-  //ioe_write(AM_GPU_FBDRAW, &event);
-//}
+static void draw_tile(int x, int y, int w, int h, uint32_t *color) {
+  uint32_t pixels[w * h]; // WARNING: large stack-allocated memory
+  AM_GPU_FBDRAW_T event = {
+    .x = x, .y = y, .w = w, .h = h, .sync = 1,
+    .pixels = pixels,
+  };
+  for (int i = 0; i < w * h; i++) {
+    pixels[i] = color[i];
+  }
+  ioe_write(AM_GPU_FBDRAW, &event);
+}
 
 static uint32_t get_pixel(int x, int y) {
   int position = (y * IMG_WIDTH + x) * 3;
@@ -206,19 +209,6 @@ static uint32_t get_pixel(int x, int y) {
   B = (uint32_t)capybara_ppm[position + 2];
   return RGB2COLOR(R, G, B);
 }
-
-//static uint32_t * get_tile(unsigned char img[], int x, int y) {
-  //uint32_t tile[SIDE * SIDE];
-  //for (int i = 0; i < SIDE; i += 1) {
-    //for (int j = 0; j < SIDE; j += 1) {
-      //if (x + j >= IMG_WIDTH || y + i >= IMG_HEIGHT)
-        //tile[j + i * SIDE] = 0xffffff;
-      //else 
-        //tile[j + i * SIDE] = get_pixel(img, x + j, y + i);
-    //}
-  //}
-  //return tile;
-//}
 
 void splash() {
   AM_GPU_CONFIG_T info = {0};
@@ -230,14 +220,17 @@ void splash() {
   uint32_t test = get_pixel(511, 0);
   num2str(test, str);
   puts(str);
-  //char pixels[w * SIDE];
-  //for (size_t i = 0; i < h / SIDE; i += 1) {
-    //for (size_t x = 0; x < w; x += 1) {
-      //for (size_t y = i * SIDE; y < i * SIDE + SIDE; y += 1) {
-
-      //}
-    //}
-  //}
+  uint32_t pixels[w * SIDE];
+  for (size_t i = 0; i < h / SIDE; i += 1) {
+    for (size_t x = 0; x < w; x += 1) {
+      for (size_t y = i * SIDE, abs_y = 0; y < i * SIDE + SIDE; y += 1, abs_y += 1) {
+        size_t srcx = ROUND(x * (IMG_WIDTH / w));
+        size_t srcy = ROUND(y * (IMG_HEIGHT / h));
+        pixels[x + abs_y * w] = get_pixel(srcx, srcy);
+      }
+    }
+    draw_tile(0, i * SIDE, w, SIDE, pixels);
+  }
 }
 
 // Operating system is a C program!
