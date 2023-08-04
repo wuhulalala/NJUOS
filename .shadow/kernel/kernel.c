@@ -228,10 +228,8 @@ void splash() {
   puts("hello world\n");
   char str[128];
   //uint32_t test = get_pixel(0, 1);
-  num2str(w, str);
+  num2str(h, str);
   puts(str);
-  putch('\n');
-   
 }
 
 // Operating system is a C program!
