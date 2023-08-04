@@ -186,26 +186,26 @@ void print_key() {
 }
 
 
-static void draw_tile(int x, int y, int w, int h, uint32_t color) {
-  uint32_t pixels[w * h]; // WARNING: large stack-allocated memory
-  AM_GPU_FBDRAW_T event = {
-    .x = x, .y = y, .w = w, .h = h, .sync = 1,
-    .pixels = pixels,
-  };
-  for (int i = 0; i < w * h; i++) {
-    pixels[i] = color;
-  }
-  ioe_write(AM_GPU_FBDRAW, &event);
-}
+//static void draw_tile(int x, int y, int w, int h, uint32_t color) {
+  //uint32_t pixels[w * h]; // WARNING: large stack-allocated memory
+  //AM_GPU_FBDRAW_T event = {
+    //.x = x, .y = y, .w = w, .h = h, .sync = 1,
+    //.pixels = pixels,
+  //};
+  //for (int i = 0; i < w * h; i++) {
+    //pixels[i] = color;
+  //}
+  //ioe_write(AM_GPU_FBDRAW, &event);
+//}
 
-static uint32_t get_pixel(int x, int y) {
-  int position = (y * IMG_WIDTH + x) * 3;
-  uint32_t R, G, B;
-  R = (uint32_t)capybara_ppm[position];
-  G = (uint32_t)capybara_ppm[position + 1];
-  B = (uint32_t)capybara_ppm[position + 2];
-  return RGB2COLOR(R, G, B);
-}
+//static uint32_t get_pixel(int x, int y) {
+  //int position = (y * IMG_WIDTH + x) * 3;
+  //uint32_t R, G, B;
+  //R = (uint32_t)capybara_ppm[position];
+  //G = (uint32_t)capybara_ppm[position + 1];
+  //B = (uint32_t)capybara_ppm[position + 2];
+  //return RGB2COLOR(R, G, B);
+//}
 
 //static uint32_t * get_tile(unsigned char img[], int x, int y) {
   //uint32_t tile[SIDE * SIDE];
@@ -227,17 +227,11 @@ void splash() {
   h = info.height;
   puts("hello world\n");
   char str[128];
-  uint32_t test = get_pixel(0, 1);
-  num2str(test, str);
+  //uint32_t test = get_pixel(0, 1);
+  num2str(w, str);
   puts(str);
   putch('\n');
-  for (int x = 0; x * SIDE <= w; x ++) {
-    for (int y = 0; y * SIDE <= h; y++) {
-      if ((x & 1) ^ (y & 1)) {
-        draw_tile(x * SIDE, y * SIDE, SIDE, SIDE, 0xffffff); // white
-      }
-    }
-  }
+   
 }
 
 // Operating system is a C program!
