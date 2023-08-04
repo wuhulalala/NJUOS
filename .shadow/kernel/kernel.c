@@ -45,8 +45,8 @@ static inline void puts(const char *s) {
 
 static inline void num2str(uint32_t num, char *str) {
   char temp[128];
-  size_t index = 0;
-  for (size_t model = num % 10; num > 0; num = num / 10) temp[index++] = model;
+  int index = 0;
+  for (size_t model = num % 10; num > 0; num = num / 10, model = num % 10) temp[index++] = model;
   size_t len = index;
   for (index--; index >= 0; index--) str[len - index - 1] = temp[index] + '0';
   str[len] = '\0';
