@@ -94,7 +94,7 @@ void splash() {
   ioe_read(AM_GPU_CONFIG, &info);
   w = info.width;
   h = info.height;
-  printf("hello world\n");
+  puts("hello world\n");
   uint32_t test = get_pixel(0, 0);
   printf("The first pixel is %d", test);
   for (int x = 0; x * SIDE <= w; x ++) {
