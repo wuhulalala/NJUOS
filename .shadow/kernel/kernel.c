@@ -227,9 +227,11 @@ void splash() {
         size_t srcx = ROUND(x * (IMG_WIDTH / w));
         size_t srcy = ROUND(y * (IMG_HEIGHT / h));
         pixels[x + abs_y * w] = get_pixel(srcx, srcy);
+        puts("there is question?\n");
       }
     }
     draw_tile(0, i * SIDE, w, SIDE, pixels);
+    puts("there is question?\n");
   }
 }
 
