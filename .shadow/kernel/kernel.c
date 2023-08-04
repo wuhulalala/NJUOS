@@ -107,6 +107,7 @@ void splash() {
   uint32_t test = get_pixel(0, 0);
   num2str(test, str);
   puts(str);
+  putch('\n');
   for (int x = 0; x * SIDE <= w; x ++) {
     for (int y = 0; y * SIDE <= h; y++) {
       if ((x & 1) ^ (y & 1)) {
