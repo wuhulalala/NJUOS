@@ -43,6 +43,14 @@ static inline void puts(const char *s) {
   for (; *s; s++) putch(*s);
 }
 
+static inline void num2str(uint32_t num, char *str) {
+  char temp[128];
+  size_t index = 0;
+  for (size_t model = num % 10; num > 0; num = num / 10) temp[index++] = model;
+  size_t len = index;
+  for (index--; index >= 0; index--) str[len - index - 1] = temp[index] + '0';
+  str[len] = '\0';
+}
 void print_key() {
   AM_INPUT_KEYBRD_T event = { .keycode = AM_KEY_NONE };
   ioe_read(AM_INPUT_KEYBRD, &event);
@@ -95,8 +103,10 @@ void splash() {
   w = info.width;
   h = info.height;
   puts("hello world\n");
+  char str[128];
   uint32_t test = get_pixel(0, 0);
-  printf("The first pixel is %d", test);
+  num2str(test, str);
+  puts(str);
   for (int x = 0; x * SIDE <= w; x ++) {
     for (int y = 0; y * SIDE <= h; y++) {
       if ((x & 1) ^ (y & 1)) {
