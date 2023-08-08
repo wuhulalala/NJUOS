@@ -1,5 +1,4 @@
 #include "thread.h"
-#include "am.h"
 extern mod_pmm_t *pmm;
 static void entry(int tid) { pmm->alloc(128); }
 static void goodbye()      { printf("End.\n"); }
