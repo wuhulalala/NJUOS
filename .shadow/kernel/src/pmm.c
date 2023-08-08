@@ -1,5 +1,5 @@
 #include <common.h>
-
+#define HEAP_SIZE 100
 static void *kalloc(size_t size) {
   return NULL;
 }
