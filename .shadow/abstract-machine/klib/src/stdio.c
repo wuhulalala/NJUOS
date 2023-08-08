@@ -33,7 +33,7 @@ int printf(const char *fmt, ...) {
 					if (tempInt < 0) *po++ = '-';
 					if (tempInt == 0) *po++ = '0';
 					tempInt = abs(tempInt);
-					char *num = (char*)malloc(MAX_INT);
+					char num[MAX_INT] = {0};
 					int digit = 0;
 					for (int t = tempInt % 10; tempInt != 0; tempInt = tempInt / 10, t = tempInt % 10) {
 						num[digit++] = t + '0';
@@ -42,7 +42,6 @@ int printf(const char *fmt, ...) {
 						*po++ = num[digit - 1];
 						digit--;
 					}
-					free(num);
 					break;
 				case 'c':
 					tempChar = va_arg(ap, int);
