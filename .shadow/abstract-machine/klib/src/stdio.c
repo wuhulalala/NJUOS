@@ -16,8 +16,8 @@ int printf(const char *fmt, ...) {
 	int tempInt = 0;
 	int tempChar = 0;
 	char *tempPointer = NULL;
-	__uint64_t tempAddress = 0;
-	__uint8_t hex = 0;
+	unsigned long tempAddress = 0;
+	int hex = 0;
 	int lastIsNotFormater = 1;
 	while (*pb != '\0') {
 		if (*pb != '%' && lastIsNotFormater) {
@@ -57,7 +57,7 @@ int printf(const char *fmt, ...) {
 				case 'p':
 					*po++ = '0';
 					*po++ = 'x';
-					tempAddress = va_arg(ap, __uint64_t);
+					tempAddress = va_arg(ap, unsigned long);
 					if (tempAddress == 0) {*po++ = '0'; break;}
 					int startFlag = 1;
 					for (int i = 15; i >= 0; i--) {
