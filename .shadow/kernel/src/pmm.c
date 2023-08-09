@@ -1,5 +1,6 @@
 #ifndef TEST
 #include <common.h>
+#include "spinlock.h"
 #endif
 #ifdef TEST
 #define HEAP_SIZE 128 * (1 << 20)
@@ -11,7 +12,12 @@ Area heap = {};
 #include "kernel.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "spinlock.h"
 #endif
+
+spinlock_t lk = SPIN_INIT();
+
+
 static void *kalloc(size_t size) {
   return NULL;
 }
@@ -24,6 +30,7 @@ static void kfree(void *ptr) {
 static void pmm_init() {
   uintptr_t pmsize = ((uintptr_t)heap.end - (uintptr_t)heap.start);
   printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, heap.start, heap.end);
+
 }
 #else
 // 测试代码的 pmm_init ()
