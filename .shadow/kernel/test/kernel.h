@@ -1,4 +1,4 @@
-#include "am.h"
+#define TEST
 #ifdef TEST
 #include <stddef.h>
 #endif
