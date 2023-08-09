@@ -12,7 +12,6 @@ Area heap = {};
 #include "kernel.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "spinlock.h"
 #endif
 
 spinlock_t lk = SPIN_INIT();
