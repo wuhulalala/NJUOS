@@ -12,6 +12,7 @@ static void os_run() {
     sum++;
   } 
   printf("sum is %d\n", sum);
+  while(1);
 }
 
 MODULE_DEF(os) = {
