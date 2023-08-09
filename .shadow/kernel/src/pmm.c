@@ -9,6 +9,7 @@ typedef struct {
 Area heap = {};
 #include <stddef.h>
 #include "kernel.h"
+#include <stdlib.h>
 #endif
 static void *kalloc(size_t size) {
   while(1);
