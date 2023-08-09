@@ -11,6 +11,7 @@ Area heap = {};
 #include "kernel.h"
 #endif
 static void *kalloc(size_t size) {
+  while(1);
   return NULL;
 }
 
