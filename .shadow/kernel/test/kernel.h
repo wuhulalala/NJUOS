@@ -1,3 +1,4 @@
+#include "am.h"
 #ifdef TEST
 #include <stddef.h>
 #endif
