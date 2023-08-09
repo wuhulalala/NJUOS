@@ -10,6 +10,7 @@ Area heap = {};
 #include <stddef.h>
 #include "kernel.h"
 #include <stdlib.h>
+#include <stdio.h>
 #endif
 static void *kalloc(size_t size) {
   while(1);
