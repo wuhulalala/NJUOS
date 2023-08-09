@@ -1,6 +1,7 @@
 #ifndef TEST
 #include <common.h>
 #include "spinlock.h"
+spinlock_t lk = SPIN_INIT();
 #endif
 #ifdef TEST
 #define HEAP_SIZE 128 * (1 << 20)
@@ -14,7 +15,6 @@ Area heap = {};
 #include <stdio.h>
 #endif
 
-spinlock_t lk = SPIN_INIT();
 
 
 static void *kalloc(size_t size) {
