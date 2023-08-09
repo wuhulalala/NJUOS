@@ -1,4 +1,5 @@
 #include "spinlock.h"
+#include <klib-macros.h>
 void spin_lock(spinlock_t *lk) {
     while (1) {
         intptr_t value = atomic_xchg(lk, LOCKED);
