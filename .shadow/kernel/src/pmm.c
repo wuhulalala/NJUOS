@@ -1,4 +1,6 @@
+#ifndef TEST
 #include <common.h>
+#endif
 #ifdef TEST
 #define HEAP_SIZE 128 * (1 << 20)
 typedef struct {
@@ -6,6 +8,7 @@ typedef struct {
 } Area;
 Area heap = {};
 #include <stddef.h>
+#include "common.h"
 #endif
 static void *kalloc(size_t size) {
   return NULL;
