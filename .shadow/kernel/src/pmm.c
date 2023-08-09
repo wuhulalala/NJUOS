@@ -8,7 +8,7 @@ typedef struct {
 } Area;
 Area heap = {};
 #include <stddef.h>
-#include "common.h"
+#include "kernel.h"
 #endif
 static void *kalloc(size_t size) {
   return NULL;
