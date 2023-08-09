@@ -5,6 +5,7 @@ typedef struct {
   void *start, *end;
 } Area;
 Area heap = {};
+#include <stddef.h>
 #endif
 static void *kalloc(size_t size) {
   return NULL;
