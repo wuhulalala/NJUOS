@@ -1,4 +1,5 @@
 #include "spinlock.h"
+#include <klib-macros.h>
 #define PGSIZE 4096
 #define CHUNK_BASE 
 #define MAXSIZE (16 << 20)
@@ -13,3 +14,33 @@ typedef struct Buddy {
     spinlock_t lk; 
 }Buddy;
 
+// some helpful marcos
+#define CHUNKS_STATUS_SIZE (1)
+#define CHUNKS_FLAG_SIZE (1)
+#define CHUNKS_IDX_SIZE (sizeof(uintptr_t) * 8 - CHUNKS_STATUS_SIZE - CHUNKS_FLAG_SIZE)
+
+#define CHUNKS_PAGE_UNUSED (0)
+#define CHUNKS_PAGE_INUSE (1)
+
+#define CHUNKS_PAGE_BUDDY (1)
+#define CHUNKS_PAGE_SLAB (0)
+
+#define CHUNKS_IDX_MASK ((uintptr_t)0xffffffffffff >> (CHUNKS_STATUS_SIZE + CHUNKS_FLAG_SIZE))
+#define CHUNKS_FLAG_MASK ((uintptr_t)1 << CHUNKS_IDX_SIZE + CHUNKS_STATUS_SIZE)
+#define CHUNKS_STATUS_MASK ((uintptr_t)1 << CHUNKS_IDX_SIZE)
+
+#define CHUNKS_GET_IDX(val) ((val) & CHUNKS_IDX_MASK)
+#define CHUNKS_GET_FLAG(val) ((val) & CHUNKS_FLAG_MASK)
+#define CHUNKS_GET_STATUS(val) ((val) & CHUNKS_STATUS_MASK)
+
+#define CHUNKS_SET_IDX(val, new_value) ((((val) >> CHUNKS_IDX_SIZE) << CHUNKS_IDX_SIZE) | (uintptr_t)(new_value))
+#define CHUNKS_SET_FLAG(val, new_value) ((((val) << 1) >> 1) | (uintptr_t)(new_value) << (CHUNKS_IDX_SIZE + CHUNKS_STATUS_SIZE))
+#define CHUNKS_SET_STATUS(val, new_value) ((((((val) << 1) >> 1) >> CHUNKS_IDX_SIZE) == (uintptr_t)(new_value)) ? (val) : (val) ^ CHUNKS_STATUS_MASK)
+
+#define CHUNKS_GETIDX_ADD(add) CHUNKS_GET_IDX(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE])
+#define CHUNKS_GETFLAG_ADD(add) CHUNKS_GET_FLAG(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE])
+#define CHUNKS_GETSTATUS_ADD(add) CHUNKS_GET_STATUS(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE])
+
+#define CHUNKS_SETIDX_ADD(add, val) CHUNKS_SET_IDX(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE], val)
+#define CHUNKS_SETFLAG_ADD(add, val) CHUNKS_SET_FLAG(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE], val)
+#define CHUNKS_SETSTATUS_ADD(add, val) CHUNKS_SET_STATUS(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE], val)
