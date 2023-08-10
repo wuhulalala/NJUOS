@@ -16,6 +16,7 @@ Area heap = {};
 #include <stdio.h>
 #include <stdint.h>
 #include "chunks.h"
+#include <assert.h>
 #endif
 
 uintptr_t *chunks = NULL;
