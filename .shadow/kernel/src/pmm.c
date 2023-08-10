@@ -1,6 +1,7 @@
 #ifndef TEST
 #include <common.h>
 #include "spinlock.h"
+#include "chunks.h"
 spinlock_t lk = SPIN_INIT();
 #endif
 #ifdef TEST
@@ -15,7 +16,8 @@ Area heap = {};
 #include <stdio.h>
 #endif
 
-
+uintptr_t *chunks = NULL;
+uintptr_t chunks_size = 0;
 
 static void *kalloc(size_t size) {
   return NULL;
@@ -28,9 +30,10 @@ static void kfree(void *ptr) {
 // 框架代码中的 pmm_init (在 AbstractMachine 中运行)
 static void pmm_init() {
   uintptr_t pmsize = ((uintptr_t)heap.end - (uintptr_t)heap.start);
-  spin_lock(&lk);
   printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, heap.start, heap.end);
-  spin_unlock(&lk);
+  chunks = (uintptr_t*)heap.start;
+  chunks_size = (((uintptr_t)heap.end - (uintptr_t)heap.start) + PGSIZE - 1) / PGSIZE;
+  printf("the chunks is [%p, %p), the chunks size is %d\n", (uintptr_t)chunks, (uintptr_t)(chunks) + (uintptr_t)(chunks_size) * PGSIZE, chunks_size); 
 
 }
 #else
