@@ -56,7 +56,7 @@ static void pmm_init() {
   printf("the idx mask is %p, the flag mask is %p, the status flag is %p\n", CHUNKS_IDX_MASK, CHUNKS_FLAG_MASK, CHUNKS_STATUS_MASK);
   printf("idx is %p, flag is %ld, status is %ld\n", CHUNKS_GET_IDX(chunks[1]), CHUNKS_GET_FLAG(chunks[1]), CHUNKS_GET_STATUS(chunks[1]));
 
-  printf("the index is %ld, the flag is %ld, the status is %ld\n", CHUNKS_GETIDX_ADD(chunks + 10), CHUNKS_GETFLAG_ADD(chunks + 10), CHUNKS_GETSTATUS_ADD(chunks + 10));
+  printf("the index is %p, the flag is %p, the status is %p\n", CHUNKS_GETIDX_ADD(chunks + 10), CHUNKS_GETFLAG_ADD(chunks + 10), CHUNKS_GETSTATUS_ADD(chunks + 10));
   CHUNKS_SETIDX_ADD((uintptr_t)chunks + (uintptr_t)10, 100);
   CHUNKS_SETFLAG_ADD((uintptr_t)chunks + (uintptr_t)10, 1);
   CHUNKS_SETSTATUS_ADD((uintptr_t)chunks + (uintptr_t)10, 1);
