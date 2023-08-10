@@ -50,7 +50,7 @@ static void pmm_init() {
   chunks = (uintptr_t*)heap.start;
   assert(chunks);
   chunks_size = (((uintptr_t)heap.end - (uintptr_t)heap.start) + PGSIZE - 1) / PGSIZE;
-  printf("the address is in the %d page\n", ((uintptr_t)ROUNDUP(heap.start + 10, PGSIZE) - (uintptr_t)heap.start) / PGSIZE);
+  printf("the address is in the %d page\n", ((uintptr_t)ROUNDUP(heap.start + PGSIZE, PGSIZE) - (uintptr_t)heap.start) / PGSIZE);
   
 
   printf("the index is %ld, the flag is %ld, the status is %ld\n", CHUNKS_GETIDX_ADD(chunks + 10), CHUNKS_GETFLAG_ADD(chunks + 10), CHUNKS_GETSTATUS_ADD(chunks + 10));
