@@ -52,7 +52,7 @@ static void pmm_init() {
   chunks_size = (((uintptr_t)heap.end - (uintptr_t)heap.start) + PGSIZE - 1) / PGSIZE;
   printf("the address is in the %d page\n", ((uintptr_t)ROUNDUP(heap.start + PGSIZE, PGSIZE) - (uintptr_t)heap.start) / PGSIZE);
   chunks[1] = 0xfffffffffff0;
-  uintptr_t temp = 0xffffffffffff & 0x0111111111111111;
+  uintptr_t temp = 0xffffffffffff & 0x0100000000000000;
   printf("the temp flag is %p\n", temp);
   printf("the chunk is %p\n", chunks[1]);
   printf("the idx mask is %p, the flag mask is %p, the status flag is %p\n", CHUNKS_IDX_MASK, CHUNKS_FLAG_MASK, CHUNKS_STATUS_MASK);
