@@ -39,9 +39,9 @@ typedef struct Buddy {
 #define CHUNKS_FLAG_MASK ((uintptr_t)1 << CHUNKS_IDX_SIZE + CHUNKS_STATUS_SIZE)
 #define CHUNKS_STATUS_MASK ((uintptr_t)1 << CHUNKS_IDX_SIZE)
 
-#define CHUNKS_GET_IDX(val) ((val) & CHUNKS_IDX_MASK)
-#define CHUNKS_GET_FLAG(val) ((val) & CHUNKS_FLAG_MASK)
-#define CHUNKS_GET_STATUS(val) ((val) & CHUNKS_STATUS_MASK)
+#define CHUNKS_GET_IDX(val) ((uintptr_t)(val) & CHUNKS_IDX_MASK)
+#define CHUNKS_GET_FLAG(val) ((uintptr_t)(val) & CHUNKS_FLAG_MASK)
+#define CHUNKS_GET_STATUS(val) ((uintptr_t)(val) & CHUNKS_STATUS_MASK)
 
 #define CHUNKS_SET_IDX(val, new_value) ((((val) >> CHUNKS_IDX_SIZE) << CHUNKS_IDX_SIZE) | (uintptr_t)(new_value))
 #define CHUNKS_SET_FLAG(val, new_value) ((((val) << 1) >> 1) | (uintptr_t)(new_value) << (CHUNKS_IDX_SIZE + CHUNKS_STATUS_SIZE))
