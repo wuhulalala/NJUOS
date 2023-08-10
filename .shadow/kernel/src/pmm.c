@@ -53,6 +53,7 @@ static void pmm_init() {
   printf("the address is in the %d page\n", ((uintptr_t)ROUNDUP(heap.start + PGSIZE, PGSIZE) - (uintptr_t)heap.start) / PGSIZE);
   chunks[1] = 0xfffffffffff0;
   printf("the chunk is %p\n", chunks[1]);
+  printf("the idx mask is %p, the flag mask is %p, the status flag is %p\n", CHUNKS_IDX_MASK, CHUNKS_FLAG_MASK, CHUNKS_STATUS_MASK);
   printf("idx is %p, flag is %ld, status is %ld\n", CHUNKS_GET_IDX(chunks[1]), CHUNKS_GET_FLAG(chunks[1]), CHUNKS_GET_STATUS(chunks[1]));
 
   printf("the index is %ld, the flag is %ld, the status is %ld\n", CHUNKS_GETIDX_ADD(chunks + 10), CHUNKS_GETFLAG_ADD(chunks + 10), CHUNKS_GETSTATUS_ADD(chunks + 10));
