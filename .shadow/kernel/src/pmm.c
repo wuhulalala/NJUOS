@@ -55,8 +55,8 @@ static void pmm_init() {
 
   printf("the index is %p, the flag is %p, the status is %p\n", CHUNKS_GETIDX_ADD(chunks + 10), CHUNKS_GETFLAG_ADD(chunks + 10), CHUNKS_GETSTATUS_ADD(chunks + 10));
   chunks[0] = CHUNKS_SET_IDX(chunks[0], 100);
-  chunks[0] = CHUNKS_SET_FLAG(chunks[0], 0);
-  chunks[0] = CHUNKS_SET_STATUS(chunks[0], 0);
+  chunks[0] = CHUNKS_SET_FLAG(chunks[0], 1);
+  chunks[0] = CHUNKS_SET_STATUS(chunks[0], 1);
   printf("the chunks0 is %p\n", chunks[0]);
   printf("the index is %p, the flag is %ld, the status is %ld\n", CHUNKS_GETIDX_ADD(chunks + 10), CHUNKS_GETFLAG_ADD(chunks + 10), CHUNKS_GETSTATUS_ADD(chunks + 10));
   printf("the chunks is [%p, %p), the chunks size is %d\n", (uintptr_t)chunks, (uintptr_t)(chunks) + (uintptr_t)(chunks_size) * PGSIZE, chunks_size); 
