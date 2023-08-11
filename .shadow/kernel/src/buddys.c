@@ -42,7 +42,7 @@ void list_insert(Chunk* chunk) {
     chunk -> prev = head;
     next -> prev = chunk;
     chunk -> next = next;
-    spin_unlock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
+    //spin_unlock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
 
     int count = 0;
     for (Chunk *p = head; p != head; p = p -> next, count ++) {
