@@ -88,7 +88,7 @@ uintptr_t *buddys_malloc(size_t n) {
     size_t exponent = log_n(n);
     size_t actual_size = mem_request2_size(n);
     assert(actual_size);
-    int idx = exponent - 10;
+    int idx = exponent - 12;
     int baseline = idx;
     assert(idx >= 0);
     Chunk *head = NULL, *pointer = NULL;
