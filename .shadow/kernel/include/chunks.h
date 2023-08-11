@@ -1,5 +1,6 @@
 #include "spinlock.h"
 #ifndef TEST
+#include <klib.h>
 #include <klib-macros.h>
 #else
 #define ROUNDUP(a, sz)      ((((uintptr_t)a) + (sz) - 1) & ~((sz) - 1))
@@ -13,7 +14,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#include "buddys.h"
 #include <assert.h>
 #include "kernel.h"
 #define HEAP_SIZE 128 * (1 << 20)
@@ -50,7 +50,7 @@ size_t buddys_size;
 #define CHUNKS_PAGE_SLAB (0)
 
 #define CHUNKS_IDX_MASK ((uintptr_t)0xffffffffffff >> (CHUNKS_STATUS_SIZE + CHUNKS_FLAG_SIZE))
-#define CHUNKS_FLAG_MASK ((uintptr_t)1 << CHUNKS_IDX_SIZE + CHUNKS_STATUS_SIZE)
+#define CHUNKS_FLAG_MASK ((uintptr_t)1 << (CHUNKS_IDX_SIZE + CHUNKS_STATUS_SIZE))
 #define CHUNKS_STATUS_MASK ((uintptr_t)1 << CHUNKS_IDX_SIZE)
 
 #define CHUNKS_GET_IDX(val) ((uintptr_t)(val) & CHUNKS_IDX_MASK)
@@ -70,3 +70,6 @@ size_t buddys_size;
 #define CHUNKS_SET_IDX_ADD(add, val) (chunks[CHUNKS_AC_INDEX(add)] = CHUNKS_SET_IDX(chunks[CHUNKS_AC_INDEX(add)], (val)))
 #define CHUNKS_SET_FLAG_ADD(add, val) (chunks[CHUNKS_AC_INDEX(add)] = CHUNKS_SET_FLAG(chunks[CHUNKS_AC_INDEX(add)], (val)))
 #define CHUNKS_SET_STATUS_ADD(add, val) (chunks[CHUNKS_AC_INDEX(add)] = CHUNKS_SET_STATUS(chunks[CHUNKS_AC_INDEX(add)], (val)))
+
+int log_n(size_t n);
+uintptr_t mem_request2_size(size_t n);

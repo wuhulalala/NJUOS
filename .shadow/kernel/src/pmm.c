@@ -1,8 +1,6 @@
 #ifndef TEST
 #include <common.h>
-#include "spinlock.h"
 #include "chunks.h"
-#include "buddys.h"
 #endif
 #ifdef TEST
 #include "chunks.h"

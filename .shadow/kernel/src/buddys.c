@@ -1,5 +1,5 @@
 #include "buddys.h"
-#include "chunks.h"
+
 void buddys_init() {
     buddys = (Chunk*)((uintptr_t)chunks + (uintptr_t)(sizeof(uintptr_t) * chunks_size));
     assert(buddys);
@@ -11,8 +11,7 @@ void buddys_init() {
         buddys[i].lk = SPIN_INIT();
     }
 
-    for (uintptr_t iter = (uintptr_t)chunks_base; iter < heap.end; iter += MAXSIZE) {
-        int idx = CHUNKS_AC_INDEX(iter);
+    for (uintptr_t iter = (uintptr_t)chunks_base; iter < (uintptr_t)heap.end; iter += MAXSIZE) {
         CHUNKS_SET_IDX_ADD(iter, buddys_size - 1);
         CHUNKS_SET_FLAG_ADD(iter, CHUNKS_PAGE_BUDDY);
         CHUNKS_SET_STATUS_ADD(iter, CHUNKS_PAGE_UNUSED);
@@ -53,7 +52,7 @@ void list_insert(Chunk* chunk) {
 }
 
 void list_remove(Chunk *chunk) {
-    assert(chunk -> next != chunks);
+    assert(chunk -> next != chunk);
     Chunk *next = chunk -> next, *prev = chunk -> prev;
     //spin_lock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
     prev -> next = next;
