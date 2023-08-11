@@ -9,6 +9,7 @@
 #define IN_RANGE(ptr, area) ((area).start <= (ptr) && (ptr) < (area).end)
 #define putstr(s) \
   ({ for (const char *p = s; *p; p++) putch(*p); })
+#include <stddef.h>
 #endif
 #define PGSIZE 4096
 #define MAXSIZE (16 << 20)
