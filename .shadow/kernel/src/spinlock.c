@@ -1,4 +1,5 @@
 #include "spinlock.h"
+#include <stdint.h>
 static inline int atomic_xchg(volatile int *addr, int newval) {
     int result;
     asm volatile ("lock xchg %0, %1":
