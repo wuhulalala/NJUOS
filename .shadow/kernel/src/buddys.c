@@ -45,7 +45,7 @@ void list_insert(Chunk* chunk) {
     //spin_unlock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
 
     int count = 0;
-    for (Chunk *p = head; p != head; p = p -> next, count ++) {
+    for (Chunk *p = head -> next; p != head; p = p -> next, count ++) {
         printf("this is the %d node of the list, the address is %p\n", count, (void *)p);
     }
     printf("------------------------------------");
