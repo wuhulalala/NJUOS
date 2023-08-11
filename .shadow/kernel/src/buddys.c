@@ -127,7 +127,7 @@ uintptr_t *buddys_malloc(size_t n) {
         spin_unlock(&buddys[baseline].lk);
         assert(CHUNKS_GET_IDX_ADD(temp) == baseline);
         assert(CHUNKS_GET_FLAG_ADD(temp) == CHUNKS_PAGE_BUDDY);
-        assert(CHUNKS_GET_IDX_ADD(temp) == CHUNKS_PAGE_UNUSED);
+        assert(CHUNKS_GET_STATUS_ADD(temp) == CHUNKS_PAGE_UNUSED);
         baseline++;
 
     } 
