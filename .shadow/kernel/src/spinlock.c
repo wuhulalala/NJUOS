@@ -22,3 +22,8 @@ uintptr_t try_lock(spinlock_t *lk) {
     return atomic_xchg(lk, LOCKED);
 }
 
+#ifndef TEST
+int atomic_xchg(int *addr, int newval) {
+  return atomic_exchange((int *)addr, newval);
+}
+#endif
