@@ -1,12 +1,7 @@
 #include "spinlock.h"
 #include <stdint.h>
 #include <assert.h>
-static inline int atomic_xchg(volatile int *addr, int newval) {
-    int result;
-    asm volatile ("lock xchg %0, %1":
-    "+m"(*addr), "=a"(result) : "1"(newval) : "memory");
-    return result;
-}
+#include <stdatomic.h>
 void spin_lock(spinlock_t *lk) {
     while (1) {
         uintptr_t value = atomic_xchg(lk, LOCKED);
@@ -21,4 +16,8 @@ void spin_unlock(spinlock_t *lk) {
 
 uintptr_t try_lock(spinlock_t *lk) {
     return atomic_xchg(lk, LOCKED);
+}
+
+int atomic_xchg(int *addr, int newval) {
+  return atomic_exchange((int *)addr, newval);
 }

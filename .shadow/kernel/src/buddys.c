@@ -45,22 +45,22 @@ void list_insert(Chunk* chunk) {
         break;
     }
     Chunk *next = head -> next;
-    //spin_lock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
+    spin_lock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
     head -> next = chunk;
     chunk -> prev = head;
     next -> prev = chunk;
     chunk -> next = next;
-    //spin_unlock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
+    spin_unlock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
     assert(head);
 }
 
 void list_remove(Chunk *chunk) {
     assert(chunk -> next != chunks);
     Chunk *next = chunk -> next, *prev = chunk -> prev;
-    //spin_lock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
+    spin_lock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
     prev -> next = next;
     next -> prev = prev;
-    //spin_unlock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
+    spin_unlock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
     assert(prev -> next);
     assert(next -> prev);
 }
