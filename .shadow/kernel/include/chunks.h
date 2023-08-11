@@ -1,3 +1,8 @@
+#ifndef HEADER_FILE_H  // 如果HEADER_FILE_H宏未定义
+#define HEADER_FILE_H  // 定义HEADER_FILE_H宏
+
+// 头文件的内容
+
 #include "spinlock.h"
 #ifndef TEST
 #include <klib-macros.h>
@@ -69,3 +74,5 @@ size_t buddys_size = 0;
 #define CHUNKS_SETIDX_ADD(add, val) CHUNKS_SET_IDX(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE], val)
 #define CHUNKS_SETFLAG_ADD(add, val) CHUNKS_SET_FLAG(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE], val)
 #define CHUNKS_SETSTATUS_ADD(add, val) CHUNKS_SET_STATUS(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE], val)
+
+#endif // 结束宏的定义
