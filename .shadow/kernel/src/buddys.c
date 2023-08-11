@@ -8,7 +8,7 @@ void buddys_init() {
     chunks_base = (uintptr_t*)ROUNDUP((uintptr_t)buddys + (uintptr_t)(buddys_size * sizeof(Chunk)), MAXSIZE);
     for (int i = 0; i < buddys_size; i++) {
         buddys[i].next = buddys[i].prev = &buddys[i];
-        buddys[i].lk = SPIN_INIT();
+        buddys[i].lk = SPIN_INIT()
     }
 
     for (uintptr_t iter = (uintptr_t)chunks_base; iter + MAXSIZE < (uintptr_t)heap.end; iter += MAXSIZE) {
