@@ -1,4 +1,5 @@
 #include "spinlock.h"
+#include <am.h>
 #ifndef TEST
 #include <klib-macros.h>
 void spin_lock(spinlock_t *lk) {
