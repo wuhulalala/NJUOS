@@ -14,8 +14,8 @@
 #define MAXSIZE (16 << 20)
 
 typedef struct Chunk {
-    Chunk *prev;
-    Chunk *next; 
+    struct Chunk *prev;
+    struct Chunk *next; 
     spinlock_t lk; 
 }Chunk;
 
