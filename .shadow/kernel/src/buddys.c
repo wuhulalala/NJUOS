@@ -1,5 +1,8 @@
 #include "buddys.h"
 
+void spin_lock(spinlock_t *lk);
+void spin_unlock(spinlock_t *lk);
+uintptr_t try_lock(spinlock_t *lk); 
 void buddys_init() {
     buddys = (Chunk*)((uintptr_t)chunks + (uintptr_t)(sizeof(uintptr_t) * chunks_size));
     assert(buddys);
