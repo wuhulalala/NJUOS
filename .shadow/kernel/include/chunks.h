@@ -10,6 +10,13 @@
 #define putstr(s) \
   ({ for (const char *p = s; *p; p++) putch(*p); })
 #include <stddef.h>
+#include "kernel.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
+#include "chunks.h"
+#include "buddys.h"
+#include <assert.h>
 #endif
 #define PGSIZE 4096
 #define MAXSIZE (16 << 20)
