@@ -22,7 +22,6 @@ typedef struct {
   void *start, *end;
 } Area;
 Area heap = {};
-#endif
 #define PGSIZE 4096
 #define MAXSIZE (16 << 20)
 
