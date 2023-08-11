@@ -2,6 +2,7 @@
 #define HEADER_FILE_H  
 #include <am.h>
 #include "chunks.h"
+#include "spinlock.h"
 void buddys_init();
 void list_insert(Chunk* chunk);
 
