@@ -5,6 +5,7 @@
 #include "buddys.h"
 #endif
 #ifdef TEST
+#include "chunks.h"
 #include "kernel.h"
 Area heap = {};
 #endif
