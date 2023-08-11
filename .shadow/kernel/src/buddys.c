@@ -12,8 +12,9 @@ void buddys_init() {
     }
 
     for (uintptr_t iter = (uintptr_t)chunks_base; iter < heap.end; iter += MAXSIZE) {
-        int idx = CHUNKS_AC_INDEX(iter);
-        
+        uintptr_t temp = ROUNDUP(iter, PGSIZE);
+        int idx = (((uintptr_t)ROUNDUP(iter, PGSIZE) - (uintptr_t)heap.start));
+
         printf("the chunks value is %p\n", chunks[idx]);
         CHUNKS_SET_IDX_ADD(iter, buddys_size - 1);
         
@@ -24,8 +25,8 @@ void buddys_init() {
         printf("the status is %d\n", CHUNKS_GET_STATUS_ADD(iter));
         assert(iter);
         list_insert((Chunk*)iter);
-        printf("the index is %p, the flag is %p, the status is %p\n", CHUNKS_GET_IDX_ADD(chunks + 10), 
-                CHUNKS_GET_FLAG_ADD(iter), CHUNKS_GET_STATUS_ADD(iter));
+        //printf("the index is %p, the flag is %p, the status is %p\n", CHUNKS_GET_IDX_ADD(chunks + 10), 
+         //       CHUNKS_GET_FLAG_ADD(iter), CHUNKS_GET_STATUS_ADD(iter));
     }
     printf("buddys initial finished \n");
     
