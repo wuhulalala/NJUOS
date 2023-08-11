@@ -8,11 +8,11 @@ void buddys_init() {
     chunks_base = (uintptr_t*)ROUNDUP((uintptr_t)buddys + (uintptr_t)(buddys_size * sizeof(Chunk)), MAXSIZE);
     for (int i = 0; i < buddys_size; i++) {
         buddys[i].next = buddys[i].prev = &buddys[i];
-        //#ifdef TEST
+        #ifdef TEST
         pthread_mutex_init(&buddys[i].lk, NULL);
-        //#else
-        //buddys[i].lk = SPIN_INIT();
-        //#endif
+        #else
+        buddys[i].lk = SPIN_INIT();
+        #endif
         
     }
 
@@ -81,57 +81,57 @@ void list_remove(Chunk *chunk) {
     printf("------------------------------------\n");
 }
 
-uintptr_t *buddys_malloc(size_t n) {
-    size_t exponent = log_n(n);
-    size_t actual_size = mem_request2_size(n);
-    assert(actual_size);
-    int idx = exponent - 10;
-    int baseline = idx;
-    assert(idx >= 0);
-    Chunk *head = NULL, *pointer = NULL;
-    while (idx < buddys_size) {
-        head = &buddys[idx];
-        if (head != head -> next) break;
-        idx++;
-    }
-    if (idx == buddys_size) {
-        return NULL;
-    }
-    spin_lock(&buddys[idx].lk);
-    pointer = buddys[idx].next;
-    assert(pointer);
-    list_remove(pointer); 
-    spin_unlock(&buddys[idx].lk);
-    assert(CHUNKS_GET_FLAG_ADD((uintptr_t)pointer) != CHUNKS_PAGE_SLAB);
-    assert(CHUNKS_GET_STATUS_ADD((uintptr_t)pointer) != CHUNKS_PAGE_INUSE);
+//uintptr_t *buddys_malloc(size_t n) {
+    //size_t exponent = log_n(n);
+    //size_t actual_size = mem_request2_size(n);
+    //assert(actual_size);
+    //int idx = exponent - 10;
+    //int baseline = idx;
+    //assert(idx >= 0);
+    //Chunk *head = NULL, *pointer = NULL;
+    //while (idx < buddys_size) {
+        //head = &buddys[idx];
+        //if (head != head -> next) break;
+        //idx++;
+    //}
+    //if (idx == buddys_size) {
+        //return NULL;
+    //}
+    //spin_lock(&buddys[idx].lk);
+    //pointer = buddys[idx].next;
+    //assert(pointer);
+    //list_remove(pointer); 
+    //spin_unlock(&buddys[idx].lk);
+    //assert(CHUNKS_GET_FLAG_ADD((uintptr_t)pointer) != CHUNKS_PAGE_SLAB);
+    //assert(CHUNKS_GET_STATUS_ADD((uintptr_t)pointer) != CHUNKS_PAGE_INUSE);
 
-    CHUNKS_SET_IDX_ADD(pointer, baseline);
-    CHUNKS_SET_FLAG_ADD(pointer, CHUNKS_PAGE_BUDDY);
-    CHUNKS_SET_STATUS_ADD(pointer, CHUNKS_PAGE_INUSE);
+    //CHUNKS_SET_IDX_ADD(pointer, baseline);
+    //CHUNKS_SET_FLAG_ADD(pointer, CHUNKS_PAGE_BUDDY);
+    //CHUNKS_SET_STATUS_ADD(pointer, CHUNKS_PAGE_INUSE);
 
-    assert(CHUNKS_GET_FLAG_ADD((uintptr_t)pointer) == CHUNKS_PAGE_BUDDY);
-    assert(CHUNKS_GET_STATUS_ADD((uintptr_t)pointer) == CHUNKS_PAGE_INUSE);
+    //assert(CHUNKS_GET_FLAG_ADD((uintptr_t)pointer) == CHUNKS_PAGE_BUDDY);
+    //assert(CHUNKS_GET_STATUS_ADD((uintptr_t)pointer) == CHUNKS_PAGE_INUSE);
 
-    Chunk *temp = NULL;
-    while (idx > baseline) {
-        temp = (Chunk *)((uintptr_t)pointer +  (uintptr_t)(((uintptr_t)1 << baseline) * PGSIZE));
-        assert(temp);
-        CHUNKS_SET_IDX_ADD(temp, baseline);
-        CHUNKS_SET_FLAG_ADD(temp, CHUNKS_PAGE_BUDDY);
-        CHUNKS_SET_STATUS_ADD(temp, CHUNKS_PAGE_UNUSED);
-        spin_lock(&buddys[baseline].lk);
-        list_insert(temp);
-        spin_unlock(&buddys[baseline].lk);
-        assert(CHUNKS_GET_IDX_ADD(temp) == baseline);
-        assert(CHUNKS_GET_FLAG_ADD(temp) == CHUNKS_PAGE_BUDDY);
-        assert(CHUNKS_GET_IDX_ADD(temp) == CHUNKS_PAGE_UNUSED);
-        baseline++;
+    //Chunk *temp = NULL;
+    //while (idx > baseline) {
+        //temp = (Chunk *)((uintptr_t)pointer +  (uintptr_t)(((uintptr_t)1 << baseline) * PGSIZE));
+        //assert(temp);
+        //CHUNKS_SET_IDX_ADD(temp, baseline);
+        //CHUNKS_SET_FLAG_ADD(temp, CHUNKS_PAGE_BUDDY);
+        //CHUNKS_SET_STATUS_ADD(temp, CHUNKS_PAGE_UNUSED);
+        //spin_lock(&buddys[baseline].lk);
+        //list_insert(temp);
+        //spin_unlock(&buddys[baseline].lk);
+        //assert(CHUNKS_GET_IDX_ADD(temp) == baseline);
+        //assert(CHUNKS_GET_FLAG_ADD(temp) == CHUNKS_PAGE_BUDDY);
+        //assert(CHUNKS_GET_IDX_ADD(temp) == CHUNKS_PAGE_UNUSED);
+        //baseline++;
 
-    } 
+    //} 
 
-    return (uintptr_t*)pointer;
-}
-
-//void buddys_free(uint8_t * add) {
-
+    //return (uintptr_t*)pointer;
 //}
+
+////void buddys_free(uint8_t * add) {
+
+////}
