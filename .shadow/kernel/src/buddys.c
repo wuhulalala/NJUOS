@@ -5,7 +5,7 @@ void buddys_init() {
     assert(buddys);
     buddys_size = log_n(MAXSIZE / PGSIZE) + 1;
     assert(buddys_size > 0);
-    chunks_base = (uintptr_t*)ROUNDDOWN((uintptr_t)buddys + (uintptr_t)(buddys_size * sizeof(Chunk)), MAXSIZE);
+    chunks_base = (uintptr_t*)ROUNDUP((uintptr_t)buddys + (uintptr_t)(buddys_size * sizeof(Chunk)), MAXSIZE);
     for (int i = 0; i < buddys_size; i++) {
         buddys[i].next = buddys[i].prev = &buddys[i];
         buddys[i].lk = SPIN_INIT();
