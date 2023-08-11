@@ -8,11 +8,11 @@ void buddys_init() {
     chunks_base = (uintptr_t*)ROUNDUP((uintptr_t)buddys + (uintptr_t)(buddys_size * sizeof(Chunk)), MAXSIZE);
     for (int i = 0; i < buddys_size; i++) {
         buddys[i].next = buddys[i].prev = &buddys[i];
-        #ifdef TEST
+        //#ifdef TEST
         pthread_mutex_init(&buddys[i].lk, NULL);
-        #else
-        buddys[i].lk = SPIN_INIT();
-        #endif
+        //#else
+        //buddys[i].lk = SPIN_INIT();
+        //#endif
         
     }
 
