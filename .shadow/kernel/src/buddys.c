@@ -17,6 +17,7 @@ void buddys_init() {
 
         printf("the chunks value is %p\n", chunks[idx]);
         CHUNKS_SET_IDX_ADD(iter, buddys_size - 1);
+        printf("the chunks value is %p\n", chunks[idx]);
         
         printf("the idx is %d\n", CHUNKS_GET_IDX_ADD(iter));
         CHUNKS_SET_FLAG_ADD(iter, CHUNKS_PAGE_BUDDY);
