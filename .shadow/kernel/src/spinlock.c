@@ -1,5 +1,7 @@
 #include "spinlock.h"
+#ifndef TEST
 #include <klib-macros.h>
+#endif
 static inline int atomic_xchg(volatile int *addr, int newval) {
     int result;
     asm volatile ("lock xchg %0, %1":
