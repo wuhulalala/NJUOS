@@ -5,8 +5,8 @@ int log_n(size_t n) {
     assert(n <= MAXSIZE && n >= 0);
     for (int i = 0; i < sizeof(uintptr_t) * 8; i++) {
         if (((uintptr_t)1 << i) >= n) {
-            break;
             result = i;
+            break;
         }
     }
     return result;
