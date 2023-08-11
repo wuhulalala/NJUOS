@@ -16,6 +16,11 @@
 #include <stdint.h>
 #include "buddys.h"
 #include <assert.h>
+#define HEAP_SIZE 128 * (1 << 20)
+typedef struct {
+  void *start, *end;
+} Area;
+Area heap = {};
 #endif
 #define PGSIZE 4096
 #define MAXSIZE (16 << 20)

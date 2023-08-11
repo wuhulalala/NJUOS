@@ -3,14 +3,9 @@
 #include "spinlock.h"
 #include "chunks.h"
 #include "buddys.h"
-spinlock_t lk = SPIN_INIT();
 #endif
 #ifdef TEST
-#define HEAP_SIZE 128 * (1 << 20)
-typedef struct {
-  void *start, *end;
-} Area;
-Area heap = {};
+
 #include "chunks.h"
 #endif
 
