@@ -1,5 +1,3 @@
-
-
 #include "spinlock.h"
 #ifndef TEST
 #include <klib-macros.h>
@@ -18,6 +16,7 @@
 #include "buddys.h"
 #include <assert.h>
 #include "kernel.h"
+#endif
 #define HEAP_SIZE 128 * (1 << 20)
 typedef struct {
   void *start, *end;
