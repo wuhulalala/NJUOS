@@ -15,7 +15,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <assert.h>
-#include <pthread.h>
 #include "kernel.h"
 #define HEAP_SIZE 128 * (1 << 20)
 typedef struct {
@@ -29,7 +28,7 @@ Area heap;
 typedef struct Chunk {
     struct Chunk *prev;
     struct Chunk *next; 
-    pthread_mutex_t lk; 
+    spinlock_t lk; 
 }Chunk;
 
 uintptr_t *chunks;
