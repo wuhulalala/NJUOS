@@ -11,7 +11,7 @@ void buddys_init() {
         buddys[i].lk = SPIN_INIT();
     }
 
-    for (uintptr_t iter = (uintptr_t)chunks_base; iter < (uintptr_t)heap.end; iter += MAXSIZE) {
+    for (uintptr_t iter = (uintptr_t)chunks_base; iter + MAXSIZE < (uintptr_t)heap.end; iter += MAXSIZE) {
         CHUNKS_SET_IDX_ADD(iter, buddys_size - 1);
         CHUNKS_SET_FLAG_ADD(iter, CHUNKS_PAGE_BUDDY);
         CHUNKS_SET_STATUS_ADD(iter, CHUNKS_PAGE_UNUSED);
