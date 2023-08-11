@@ -1,7 +1,7 @@
 #include "buddys.h"
 #include "chunks.h"
 void buddys_init() {
-    buddys = (uintptr_t*)((uintptr_t)chunks + (uintptr_t)(sizeof(uintptr_t) * chunks_size));
+    buddys = (Chunk*)((uintptr_t)chunks + (uintptr_t)(sizeof(uintptr_t) * chunks_size));
     assert(buddys);
     buddys_size = log_n(MAXSIZE / PGSIZE) + 1;
     assert(buddys_size > 0);
