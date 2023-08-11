@@ -4,7 +4,7 @@
 #include <klib.h>
 #include <am.h>
 typedef int spinlock_t;
-#define SPIN_INIT() 0
+#define SPIN_INIT 0
 #define LOCKED 1
 #define UNLOCKED 0
 void spin_lock(spinlock_t *lk);
@@ -15,7 +15,7 @@ uintptr_t try_lock(spinlock_t *lk);
 #include <assert.h>
 #include <pthread.h>
 
-#define SPIN_INIT() (PTHREAD_MUTEX_INITIALIZER)
+#define SPIN_INIT PTHREAD_MUTEX_INITIALIZER
 
 typedef pthread_mutex_t spinlock_t;
 void spin_lock(spinlock_t *lk)   { pthread_mutex_lock(lk); }
