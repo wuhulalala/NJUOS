@@ -14,7 +14,9 @@ uintptr_t try_lock(spinlock_t *lk);
 #include <stdint.h>
 #include <assert.h>
 #include <pthread.h>
-#define SPIN_INIT() PTHREAD_MUTEX_INITIALIZER
+
+#define SPIN_INIT() (PTHREAD_MUTEX_INITIALIZER)
+
 typedef pthread_mutex_t spinlock_t;
 void spin_lock(spinlock_t *lk)   { pthread_mutex_lock(lk); }
 void spin_unlock(spinlock_t *lk) { pthread_mutex_unlock(lk); }
