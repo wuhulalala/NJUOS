@@ -15,6 +15,7 @@
 #include <stdint.h>
 #include "buddys.h"
 #include <assert.h>
+#include "kernel.h"
 #define HEAP_SIZE 128 * (1 << 20)
 typedef struct {
   void *start, *end;
