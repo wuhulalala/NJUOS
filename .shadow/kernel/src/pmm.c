@@ -5,7 +5,7 @@
 #include "buddys.h"
 #endif
 #ifdef TEST
-
+#include "kernel.h"
 #endif
 
 
