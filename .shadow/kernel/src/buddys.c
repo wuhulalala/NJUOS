@@ -131,7 +131,3 @@
 
     //return (uintptr_t*)pointer;
 //}
-
-////void buddys_free(uint8_t * add) {
-
-////}
