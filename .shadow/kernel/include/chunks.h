@@ -61,10 +61,12 @@ size_t buddys_size;
 #define CHUNKS_SET_FLAG(val, new_value) ((((val) << 1) >> 1) | (uintptr_t)(new_value) << (CHUNKS_IDX_SIZE + CHUNKS_STATUS_SIZE))
 #define CHUNKS_SET_STATUS(val, new_value) ((((((val) << 1) >> 1) >> CHUNKS_IDX_SIZE) == (uintptr_t)(new_value)) ? (val) : (val) ^ CHUNKS_STATUS_MASK)
 
-#define CHUNKS_GET_IDX_ADD(add) CHUNKS_GET_IDX(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE])
-#define CHUNKS_GET_FLAG_ADD(add) CHUNKS_GET_FLAG(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE])
-#define CHUNKS_GET_STATUS_ADD(add) CHUNKS_GET_STATUS(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE])
+#define CHUNKS_AC_INDEX(add) (((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE)
 
-#define CHUNKS_SET_IDX_ADD(add, val) CHUNKS_SET_IDX(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE], val)
-#define CHUNKS_SET_FLAG_ADD(add, val) CHUNKS_SET_FLAG(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE], val)
-#define CHUNKS_SET_STATUS_ADD(add, val) CHUNKS_SET_STATUS(chunks[((uintptr_t)ROUNDUP(add, PGSIZE) - (uintptr_t)heap.start) / PGSIZE], val)
+#define CHUNKS_GET_IDX_ADD(add) CHUNKS_GET_IDX(chunks[CHUNKS_AC_INDEX(add)])
+#define CHUNKS_GET_FLAG_ADD(add) CHUNKS_GET_FLAG(chunks[CHUNKS_AC_INDEX(add)])
+#define CHUNKS_GET_STATUS_ADD(add) CHUNKS_GET_STATUS(chunks[CHUNKS_AC_INDEX(add)])
+
+#define CHUNKS_SET_IDX_ADD(add, val) CHUNKS_SET_IDX(chunks[CHUNKS_AC_INDEX(add)], val)
+#define CHUNKS_SET_FLAG_ADD(add, val) CHUNKS_SET_FLAG(chunks[CHUNKS_AC_INDEX(add)], val)
+#define CHUNKS_SET_STATUS_ADD(add, val) CHUNKS_SET_STATUS(chunks[CHUNKS_AC_INDEX(add)], val)
