@@ -12,6 +12,7 @@ static void os_run() {
     //sum++;
   //} 
   //printf("sum is %d\n", sum);
+  pmm -> alloc(5 * 4096);
   while(1);
 }
 
