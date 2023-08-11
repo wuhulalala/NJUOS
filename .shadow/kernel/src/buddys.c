@@ -13,19 +13,11 @@ void buddys_init() {
 
     for (uintptr_t iter = (uintptr_t)chunks_base; iter < heap.end; iter += MAXSIZE) {
         int idx = CHUNKS_AC_INDEX(iter);
-        printf("the chunks value is %p\n", chunks[idx]);
         CHUNKS_SET_IDX_ADD(iter, buddys_size - 1);
-        printf("the chunks value is %p\n", chunks[idx]);
-        
-        printf("the idx is %d\n", CHUNKS_GET_IDX_ADD(iter));
         CHUNKS_SET_FLAG_ADD(iter, CHUNKS_PAGE_BUDDY);
-        printf("the flag is %d\n", CHUNKS_GET_FLAG_ADD(iter));
         CHUNKS_SET_STATUS_ADD(iter, CHUNKS_PAGE_UNUSED);
-        printf("the status is %d\n", CHUNKS_GET_STATUS_ADD(iter));
         assert(iter);
         list_insert((Chunk*)iter);
-        //printf("the index is %p, the flag is %p, the status is %p\n", CHUNKS_GET_IDX_ADD(chunks + 10), 
-         //       CHUNKS_GET_FLAG_ADD(iter), CHUNKS_GET_STATUS_ADD(iter));
     }
     printf("buddys initial finished \n");
     
@@ -45,22 +37,28 @@ void list_insert(Chunk* chunk) {
         break;
     }
     Chunk *next = head -> next;
-    spin_lock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
+    //spin_lock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
     head -> next = chunk;
     chunk -> prev = head;
     next -> prev = chunk;
     chunk -> next = next;
     spin_unlock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
+
+    int count = 0;
+    for (Chunk *p = head; p != head; p = p -> next, count ++) {
+        printf("this is the %d node of the list, the address is %p\n", count, (void *)p);
+    }
+    printf("------------------------------------");
     assert(head);
 }
 
 void list_remove(Chunk *chunk) {
     assert(chunk -> next != chunks);
     Chunk *next = chunk -> next, *prev = chunk -> prev;
-    spin_lock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
+    //spin_lock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
     prev -> next = next;
     next -> prev = prev;
-    spin_unlock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
+    //spin_unlock(buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
     assert(prev -> next);
     assert(next -> prev);
 }
