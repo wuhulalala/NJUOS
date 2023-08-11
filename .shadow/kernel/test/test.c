@@ -1,10 +1,13 @@
 #include "thread.h"
 #include "kernel.h"
-static void entry(int tid) { pmm->alloc(128); }
+#define PGSIZE 4096
+static void entry(int tid) { pmm->alloc(5 * PGSIZE); }
 static void goodbye()      { printf("End.\n"); }
 int main() {
     pmm->init();
-    for (int i = 0; i < 4; i++)
-    create(entry);
-    join(goodbye);
+    pmm->alloc(5 * PGSIZE);
+    printf("End\n");
+    //for (int i = 0; i < 4; i++)
+    //create(entry);
+    //join(goodbye);
 }

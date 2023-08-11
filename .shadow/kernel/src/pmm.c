@@ -13,10 +13,14 @@ uintptr_t *chunks_base = NULL;
 Chunk *buddys = NULL;
 size_t buddys_size = 0;
 
-void buddys_init();
 
 static void *kalloc(size_t size) {
-  return NULL;
+  uint8_t pointer = NULL;
+  if (size >= 4 * PGSIZE) {
+    pointer = (uint8_t *) buddys_malloc(size);
+  }
+  assert(pointer);
+  return (void*)pointer;
 }
 
 static void kfree(void *ptr) {

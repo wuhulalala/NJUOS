@@ -41,7 +41,9 @@ void list_insert(Chunk* chunk) {
     // to do
         break;
     }
+    #ifndef TEST
     panic_on(try_lock(&buddys[CHUNKS_GET_IDX_ADD(chunk)].lk) == UNLOCKED, "Did not get the lock before the insert");
+    #endif
     Chunk *next = head -> next;
     head -> next = chunk;
     chunk -> prev = head;
@@ -57,7 +59,9 @@ void list_insert(Chunk* chunk) {
 }
 
 void list_remove(Chunk *chunk) {
+    #ifndef TEST
     panic_on(try_lock(&buddys[CHUNKS_GET_IDX_ADD(chunk)].lk) == UNLOCKED, "Did not get the lock before the remove");
+    #endif
     assert(chunk -> next != chunk);
     Chunk* head = &buddys[CHUNKS_GET_IDX_ADD(chunk)];
     Chunk *next = chunk -> next, *prev = chunk -> prev;
