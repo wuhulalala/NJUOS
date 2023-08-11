@@ -28,10 +28,10 @@ void buddys_init() {
         list_insert((Chunk*)iter);
         spin_unlock(&buddys[CHUNKS_GET_IDX_ADD(iter)].lk);
     }
-    for (uintptr_t iter = (uintptr_t)chunks_base; iter + MAXSIZE < (uintptr_t)heap.end; iter += MAXSIZE) {
-        assert(iter);
-        list_remove((Chunk*)iter);
-    }
+    //for (uintptr_t iter = (uintptr_t)chunks_base; iter + MAXSIZE < (uintptr_t)heap.end; iter += MAXSIZE) {
+        //assert(iter);
+        //list_remove((Chunk*)iter);
+    //}
     printf("buddys initial finished \n");
     
 }
