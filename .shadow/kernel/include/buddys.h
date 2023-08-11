@@ -7,6 +7,6 @@ void list_insert(Chunk* chunk);
 
 void list_remove(Chunk *chunk); 
 
-uintptr_t *buddys_malloc(size_t n)
+uintptr_t *buddys_malloc(size_t n);
 
 #endif 

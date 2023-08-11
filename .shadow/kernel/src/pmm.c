@@ -14,8 +14,11 @@ Chunk *buddys = NULL;
 size_t buddys_size = 0;
 
 
+void buddys_init();
+
+uintptr_t *buddys_malloc(size_t n);
 static void *kalloc(size_t size) {
-  uint8_t pointer = NULL;
+  uint8_t *pointer = NULL;
   if (size >= 4 * PGSIZE) {
     pointer = (uint8_t *) buddys_malloc(size);
   }
