@@ -11,14 +11,7 @@ typedef struct {
   void *start, *end;
 } Area;
 Area heap = {};
-#include <stddef.h>
-#include "kernel.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdint.h>
 #include "chunks.h"
-#include "buddys.h"
-#include <assert.h>
 #endif
 
 
