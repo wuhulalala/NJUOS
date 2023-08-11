@@ -15,5 +15,5 @@ int log_n(size_t n) {
 
 uintptr_t mem_request2_size(size_t n) {
     int exponent = log_n(n);
-    return (uintptr_t)1 >> exponent;
+    return (uintptr_t)1 << exponent;
 }
