@@ -57,6 +57,7 @@ void list_insert(Chunk* chunk) {
 
 void list_remove(Chunk *chunk) {
     assert(chunk -> next != chunk);
+    Chunk* head = &buddys[CHUNKS_GET_IDX_ADD(chunk)];
     Chunk *next = chunk -> next, *prev = chunk -> prev;
     spin_lock(&buddys[CHUNKS_GET_IDX_ADD(chunk)].lk);
     prev -> next = next;
@@ -65,7 +66,7 @@ void list_remove(Chunk *chunk) {
     assert(prev -> next);
     assert(next -> prev);
     int count = 0;
-    for (Chunk *p = chunk -> next; p != chunk; p = p -> next, count ++) {
+    for (Chunk *p = head -> next; p != head; p = p -> next, count ++) {
         printf("this is the %d node of the list, the address is %p\n", count, (void *)p);
     }
     printf("------------------------------------\n");
