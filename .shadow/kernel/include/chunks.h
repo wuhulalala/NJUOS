@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#include "buddys.h"
+//#include "buddys.h"
 #include <assert.h>
 #include "kernel.h"
 #define HEAP_SIZE 128 * (1 << 20)
