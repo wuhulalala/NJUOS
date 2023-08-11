@@ -1,3 +1,5 @@
+#ifndef HEADER_FILE_SPINLOCK  
+#define HEADER_FILE_SPINLOCK  
 #ifndef TEST
 #include <klib.h>
 #include <am.h>
@@ -17,4 +19,5 @@ typedef pthread_mutex_t spinlock_t;
 void spin_lock(spinlock_t *lk)   { pthread_mutex_lock(lk); }
 void spin_unlock(spinlock_t *lk) { pthread_mutex_unlock(lk); }
 
+#endif
 #endif
