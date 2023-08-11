@@ -131,6 +131,6 @@ uintptr_t *buddys_malloc(size_t n) {
         baseline++;
 
     } 
-
+    assert(pointer);
     return (uintptr_t*)pointer;
 }
