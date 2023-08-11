@@ -12,13 +12,16 @@ void buddys_init() {
     }
 
     for (uintptr_t iter = (uintptr_t)chunks_base; iter < heap.end; iter += MAXSIZE) {
-        CHUNKS_SETIDX_ADD(iter, buddys_size - 1);
-        CHUNKS_SETFLAG_ADD(iter, CHUNKS_PAGE_BUDDY);
-        CHUNKS_SETSTATUS_ADD(iter, CHUNKS_PAGE_UNUSED);
+        CHUNKS_SET_IDX_ADD(iter, buddys_size - 1);
+        printf("the idx is %d\n", CHUNKS_GET_IDX_ADD(iter));
+        CHUNKS_SET_FLAG_ADD(iter, CHUNKS_PAGE_BUDDY);
+        printf("the flag is %d\n", CHUNKS_GET_FLAG_ADD(iter));
+        CHUNKS_SET_STATUS_ADD(iter, CHUNKS_PAGE_UNUSED);
+        printf("the status is %d\n", CHUNKS_GET_STATUS_ADD(iter));
         assert(iter);
         list_insert((Chunk*)iter);
-        printf("the index is %p, the flag is %p, the status is %p\n", CHUNKS_GETIDX_ADD(chunks + 10), 
-                CHUNKS_GETFLAG_ADD(iter), CHUNKS_GETSTATUS_ADD(iter));
+        printf("the index is %p, the flag is %p, the status is %p\n", CHUNKS_GET_IDX_ADD(chunks + 10), 
+                CHUNKS_GET_FLAG_ADD(iter), CHUNKS_GET_STATUS_ADD(iter));
     }
     printf("buddys initial finished \n");
     
