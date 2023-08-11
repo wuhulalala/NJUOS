@@ -67,6 +67,6 @@ size_t buddys_size;
 #define CHUNKS_GET_FLAG_ADD(add) CHUNKS_GET_FLAG(chunks[CHUNKS_AC_INDEX(add)])
 #define CHUNKS_GET_STATUS_ADD(add) CHUNKS_GET_STATUS(chunks[CHUNKS_AC_INDEX(add)])
 
-#define CHUNKS_SET_IDX_ADD(add, val) (chunks[CHUNKS_AC_INDEX(add)] = CHUNKS_SET_IDX(chunks[CHUNKS_AC_INDEX(add)], val))
-#define CHUNKS_SET_FLAG_ADD(add, val) (chunks[CHUNKS_AC_INDEX(add)] = CHUNKS_SET_FLAG(chunks[CHUNKS_AC_INDEX(add)], val))
-#define CHUNKS_SET_STATUS_ADD(add, val) (chunks[CHUNKS_AC_INDEX(add)] = CHUNKS_SET_STATUS(chunks[CHUNKS_AC_INDEX(add)], val))
+#define CHUNKS_SET_IDX_ADD(add, val) (chunks[CHUNKS_AC_INDEX(add)] = CHUNKS_SET_IDX(chunks[CHUNKS_AC_INDEX(add)], (val)))
+#define CHUNKS_SET_FLAG_ADD(add, val) (chunks[CHUNKS_AC_INDEX(add)] = CHUNKS_SET_FLAG(chunks[CHUNKS_AC_INDEX(add)], (val)))
+#define CHUNKS_SET_STATUS_ADD(add, val) (chunks[CHUNKS_AC_INDEX(add)] = CHUNKS_SET_STATUS(chunks[CHUNKS_AC_INDEX(add)], (val)))
