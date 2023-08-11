@@ -1,6 +1,5 @@
 #include "thread.h"
 #include "kernel.h"
-#define PGSIZE 4096
 static void entry(int tid) { pmm->alloc(5 * PGSIZE); }
 static void goodbye()      { printf("End.\n"); }
 int main() {
