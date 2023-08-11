@@ -16,5 +16,7 @@ void spin_unlock(spinlock_t *lk) {
 uintptr_t try_lock(spinlock_t *lk) {
     return atomic_xchg(lk, LOCKED);
 }
-
+#else
+void spin_lock(spinlock_t *lk)   { pthread_mutex_lock(lk); }
+void spin_unlock(spinlock_t *lk) { pthread_mutex_unlock(lk); }
 #endif

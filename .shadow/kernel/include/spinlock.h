@@ -7,9 +7,9 @@ typedef int spinlock_t;
 #define SPIN_INIT() 0
 #define LOCKED 1
 #define UNLOCKED 0
-//void spin_lock(spinlock_t *lk);
-//void spin_unlock(spinlock_t *lk);
-//uintptr_t try_lock(spinlock_t *lk); 
+void spin_lock(spinlock_t *lk);
+void spin_unlock(spinlock_t *lk);
+uintptr_t try_lock(spinlock_t *lk); 
 #else
 #define SPIN_INIT() PTHREAD_MUTEX_INITIALIZER
 #include <stdint.h>
@@ -19,8 +19,8 @@ typedef int spinlock_t;
 
 typedef pthread_mutex_t spinlock_t;
 
-void spin_lock(spinlock_t *lk)   { pthread_mutex_lock(lk); }
-void spin_unlock(spinlock_t *lk) { pthread_mutex_unlock(lk); }
+void spin_lock(spinlock_t *lk);   
+void spin_unlock(spinlock_t *lk); 
 
 #endif
 #endif
