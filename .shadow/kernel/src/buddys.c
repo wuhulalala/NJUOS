@@ -12,9 +12,7 @@ void buddys_init() {
     }
 
     for (uintptr_t iter = (uintptr_t)chunks_base; iter < heap.end; iter += MAXSIZE) {
-        uintptr_t temp = ROUNDUP(iter, PGSIZE);
-        int idx = (((uintptr_t)ROUNDUP(iter, PGSIZE) - (uintptr_t)heap.start));
-        chunks[idx] = 0xffffffffffffffff;
+        int idx = CHUNKS_AC_INDEX(iter);
         printf("the chunks value is %p\n", chunks[idx]);
         CHUNKS_SET_IDX_ADD(iter, buddys_size - 1);
         printf("the chunks value is %p\n", chunks[idx]);
