@@ -11,19 +11,22 @@
   ({ for (const char *p = s; *p; p++) putch(*p); })
 #endif
 #define PGSIZE 4096
-#define CHUNK_BASE 
 #define MAXSIZE (16 << 20)
-typedef struct Chunk {
-    struct Chunk *prev;
-    struct Chunk *next;
-}Chunk;
 
-typedef struct Buddy {
+typedef struct Chunk {
     Chunk *prev;
     Chunk *next; 
     spinlock_t lk; 
-}Buddy;
+}Chunk;
 
+uintptr_t *chunks = NULL;
+size_t chunks_size = 0;
+
+uintptr_t *chunks_base = 0;
+Chunk *buddys = NULL;
+size_t buddys_size = 0;
+
+#define SPIN_INIT() 0
 // some helpful marcos
 #define CHUNKS_STATUS_SIZE (1)
 #define CHUNKS_FLAG_SIZE (1)

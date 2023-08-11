@@ -2,6 +2,7 @@
 #include <common.h>
 #include "spinlock.h"
 #include "chunks.h"
+#include "buddys.h"
 spinlock_t lk = SPIN_INIT();
 #endif
 #ifdef TEST
@@ -16,11 +17,11 @@ Area heap = {};
 #include <stdio.h>
 #include <stdint.h>
 #include "chunks.h"
+#include "buddys.h"
 #include <assert.h>
 #endif
 
-uintptr_t *chunks = NULL;
-uintptr_t chunks_size = 0;
+
 
 static void *kalloc(size_t size) {
   return NULL;
@@ -38,7 +39,7 @@ static void pmm_init() {
   assert(chunks);
   chunks_size = (((uintptr_t)heap.end - (uintptr_t)heap.start) + PGSIZE - 1) / PGSIZE;
   printf("the chunks is [%p, %p), the chunks size is %d\n", (uintptr_t)chunks, (uintptr_t)(chunks) + (uintptr_t)(chunks_size) * PGSIZE, chunks_size); 
-
+  buddys_init();
 }
 #else
  // 测代码的 pmm_init ()
@@ -50,16 +51,17 @@ static void pmm_init() {
   chunks = (uintptr_t*)heap.start;
   assert(chunks);
   chunks_size = (((uintptr_t)heap.end - (uintptr_t)heap.start) + PGSIZE - 1) / PGSIZE;
-  printf("the address is in the %d page\n", ((uintptr_t)ROUNDUP(heap.start + PGSIZE, PGSIZE) - (uintptr_t)heap.start) / PGSIZE);
-  chunks[0] = 0xffffffffffffffff;
+  //printf("the address is in the %d page\n", ((uintptr_t)ROUNDUP(heap.start + PGSIZE, PGSIZE) - (uintptr_t)heap.start) / PGSIZE);
+  //chunks[0] = 0xffffffffffffffff;
 
-  printf("the index is %p, the flag is %p, the status is %p\n", CHUNKS_GETIDX_ADD(chunks + 10), CHUNKS_GETFLAG_ADD(chunks + 10), CHUNKS_GETSTATUS_ADD(chunks + 10));
-  chunks[0] = CHUNKS_SET_IDX(chunks[0], 100);
-  chunks[0] = CHUNKS_SET_FLAG(chunks[0], 1);
-  chunks[0] = CHUNKS_SET_STATUS(chunks[0], 1);
-  printf("the chunks0 is %p\n", chunks[0]);
-  printf("the index is %p, the flag is %ld, the status is %ld\n", CHUNKS_GETIDX_ADD(chunks + 10), CHUNKS_GETFLAG_ADD(chunks + 10), CHUNKS_GETSTATUS_ADD(chunks + 10));
-  printf("the chunks is [%p, %p), the chunks size is %d\n", (uintptr_t)chunks, (uintptr_t)(chunks) + (uintptr_t)(chunks_size) * PGSIZE, chunks_size); 
+  //printf("the index is %p, the flag is %p, the status is %p\n", CHUNKS_GETIDX_ADD(chunks + 10), CHUNKS_GETFLAG_ADD(chunks + 10), CHUNKS_GETSTATUS_ADD(chunks + 10));
+  //chunks[0] = CHUNKS_SET_IDX(chunks[0], 100);
+  //chunks[0] = CHUNKS_SET_FLAG(chunks[0], 1);
+  //chunks[0] = CHUNKS_SET_STATUS(chunks[0], 1);
+  //printf("the chunks0 is %p\n", chunks[0]);
+  //printf("the index is %p, the flag is %ld, the status is %ld\n", CHUNKS_GETIDX_ADD(chunks + 10), CHUNKS_GETFLAG_ADD(chunks + 10), CHUNKS_GETSTATUS_ADD(chunks + 10));
+  //printf("the chunks is [%p, %p), the chunks size is %d\n", (uintptr_t)chunks, (uintptr_t)(chunks) + (uintptr_t)(chunks_size) * PGSIZE, chunks_size); 
+  buddys_init();
 }
 #endif
 MODULE_DEF(pmm) = {
