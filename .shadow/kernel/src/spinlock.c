@@ -1,4 +1,5 @@
 #include "spinlock.h"
+#ifndef TEST
 #include <klib-macros.h>
 void spin_lock(spinlock_t *lk) {
     while (1) {
@@ -15,3 +16,5 @@ void spin_unlock(spinlock_t *lk) {
 uintptr_t try_lock(spinlock_t *lk) {
     return atomic_xchg(lk, LOCKED);
 }
+
+#endif
