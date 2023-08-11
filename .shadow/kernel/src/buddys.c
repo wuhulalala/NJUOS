@@ -1,4 +1,4 @@
-#include "buddys.h"
+//#include "buddys.h"
 
 //void buddys_init() {
     //buddys = (Chunk*)((uintptr_t)chunks + (uintptr_t)(sizeof(uintptr_t) * chunks_size));
