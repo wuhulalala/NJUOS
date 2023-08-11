@@ -21,7 +21,7 @@
 typedef struct {
   void *start, *end;
 } Area;
-Area heap = {};
+Area heap;
 #define PGSIZE 4096
 #define MAXSIZE (16 << 20)
 
@@ -31,12 +31,12 @@ typedef struct Chunk {
     spinlock_t lk; 
 }Chunk;
 
-uintptr_t *chunks = NULL;
-size_t chunks_size = 0;
+uintptr_t *chunks;
+size_t chunks_size;
 
-uintptr_t *chunks_base = 0;
-Chunk *buddys = NULL;
-size_t buddys_size = 0;
+uintptr_t *chunks_base;
+Chunk *buddys;
+size_t buddys_size;
 #define SPIN_INIT() 0
 // some helpful marcos
 #define CHUNKS_STATUS_SIZE (1)

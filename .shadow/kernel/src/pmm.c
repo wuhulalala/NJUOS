@@ -6,8 +6,14 @@
 #endif
 #ifdef TEST
 #include "kernel.h"
+Area heap = {};
 #endif
+uintptr_t *chunks = NULL;
+size_t chunks_size = 0;
 
+uintptr_t *chunks_base = NULL;
+Chunk *buddys = NULL;
+size_t buddys_size = 0;
 
 void buddys_init();
 
