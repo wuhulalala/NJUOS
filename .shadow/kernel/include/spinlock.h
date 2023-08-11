@@ -1,5 +1,7 @@
-#include <am.h>
+#ifndef TEST
 #include <klib.h>
+#endif
+#include <am.h>
 typedef int spinlock_t;
 #define SPIN_INIT() 0
 #define LOCKED 1
