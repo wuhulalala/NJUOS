@@ -48,7 +48,7 @@ void list_insert(Chunk* chunk) {
     for (Chunk *p = head -> next; p != head; p = p -> next, count ++) {
         printf("this is the %d node of the list, the address is %p\n", count, (void *)p);
     }
-    printf("------------------------------------");
+    printf("------------------------------------\n");
     assert(head);
 }
 
