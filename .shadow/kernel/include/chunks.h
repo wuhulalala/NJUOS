@@ -10,7 +10,6 @@
 #define putstr(s) \
   ({ for (const char *p = s; *p; p++) putch(*p); })
 #include <stddef.h>
-#include "kernel.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
