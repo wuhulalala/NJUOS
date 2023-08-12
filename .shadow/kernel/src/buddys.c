@@ -59,11 +59,11 @@ void list_insert(Chunk* chunk) {
     next -> prev = chunk;
     chunk -> next = next;
 
-    int count = 0;
-    for (Chunk *p = head -> next; p != head; p = p -> next, count ++) {
-        printf("this is the %d node of the list, the address is %p\n", count, (void *)p);
-    }
-    printf("------------------------------------\n");
+    //int count = 0;
+    //for (Chunk *p = head -> next; p != head; p = p -> next, count ++) {
+        //printf("this is the %d node of the list, the address is %p\n", count, (void *)p);
+    //}
+    //printf("------------------------------------\n");
     assert(head);
 }
 
@@ -79,11 +79,11 @@ void list_remove(Chunk *chunk) {
 
     assert(prev -> next);
     assert(next -> prev);
-    int count = 0;
-    for (Chunk *p = head -> next; p != head; p = p -> next, count ++) {
-        printf("this is the %d node of the list, the address is %p\n", count, (void *)p);
-    }
-    printf("------------------------------------\n");
+    //int count = 0;
+    //for (Chunk *p = head -> next; p != head; p = p -> next, count ++) {
+        //printf("this is the %d node of the list, the address is %p\n", count, (void *)p);
+    //}
+    //printf("------------------------------------\n");
 }
 
 uintptr_t *buddys_malloc(size_t n) {
