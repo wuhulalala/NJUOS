@@ -76,6 +76,7 @@ void list_remove(Chunk *chunk) {
     Chunk *next = chunk -> next, *prev = chunk -> prev;
     prev -> next = next;
     next -> prev = prev;
+
     assert(prev -> next);
     assert(next -> prev);
     int count = 0;
@@ -91,6 +92,7 @@ uintptr_t *buddys_malloc(size_t n) {
     assert(actual_size);
     int idx = exponent - 12;
     int baseline = idx;
+
     assert(idx >= 0);
     Chunk *head = NULL, *pointer = NULL;
     while (idx < buddys_size) {
@@ -101,11 +103,13 @@ uintptr_t *buddys_malloc(size_t n) {
     if (idx == buddys_size) {
         return NULL;
     }
+
     spin_lock(&buddys[idx].lk);
     pointer = buddys[idx].next;
     assert(pointer);
     list_remove(pointer); 
     spin_unlock(&buddys[idx].lk);
+
     assert(CHUNKS_GET_FLAG_ADD((uintptr_t)pointer) != CHUNKS_PAGE_SLAB);
     assert(CHUNKS_GET_STATUS_ADD((uintptr_t)pointer) != CHUNKS_PAGE_INUSE);
 
@@ -123,9 +127,13 @@ uintptr_t *buddys_malloc(size_t n) {
         CHUNKS_SET_IDX_ADD(temp, baseline);
         CHUNKS_SET_FLAG_ADD(temp, CHUNKS_PAGE_BUDDY);
         CHUNKS_SET_STATUS_ADD(temp, CHUNKS_PAGE_UNUSED);
+
+
         spin_lock(&buddys[baseline].lk);
         list_insert(temp);
         spin_unlock(&buddys[baseline].lk);
+
+
         assert(CHUNKS_GET_IDX_ADD(temp) == baseline);
         assert(CHUNKS_GET_FLAG_ADD(temp) == CHUNKS_PAGE_BUDDY);
         assert(CHUNKS_GET_STATUS_ADD(temp) == CHUNKS_PAGE_UNUSED);
@@ -134,4 +142,61 @@ uintptr_t *buddys_malloc(size_t n) {
     } 
     assert(pointer);
     return (uintptr_t*)pointer;
+}
+
+void buddys_free(uintptr_t *pointer) {
+    Chunk *chunk = (Chunk *)pointer;
+    assert(chunk);
+
+    assert(CHUNKS_GET_FLAG_ADD(chunk) == CHUNKS_PAGE_BUDDY);
+    assert(CHUNKS_GET_STATUS_ADD(chunk) == CHUNKS_PAGE_INUSE);
+
+    CHUNKS_SET_STATUS_ADD(chunk, CHUNKS_PAGE_UNUSED);
+    assert(CHUNKS_GET_STATUS_ADD(chunk) == CHUNKS_PAGE_UNUSED);
+
+    int idx = CHUNKS_GET_IDX_ADD(chunk);
+
+    assert(idx >= 0 && idx < buddys_size);
+
+    size_t size = (size_t)((intptr_t)1 << idx) * PGSIZE;
+
+    assert(size >= PGSIZE && size <= MAXSIZE);
+
+
+    spin_lock(&buddys[idx].lk);
+    while (idx < buddys_size) {
+        Chunk *opposite_chunk = (Chunk *)((uintptr_t)(chunk) ^ (uintptr_t)size);
+        if (CHUNKS_GET_STATUS_ADD(opposite_chunk) == CHUNKS_PAGE_UNUSED 
+            && CHUNKS_GET_IDX_ADD(opposite_chunk) == idx && idx != buddys_size - 1) {
+
+            assert(CHUNKS_GET_STATUS_ADD(opposite_chunk) == CHUNKS_PAGE_UNUSED);
+
+
+            CHUNKS_SET_IDX_ADD(chunk, idx + 1);
+            CHUNKS_SET_IDX_ADD(opposite_chunk, idx + 1);
+
+            assert(CHUNKS_GET_IDX_ADD(chunk) == idx + 1);
+            assert(CHUNKS_GET_IDX_ADD(opposite_chunk) == idx + 1);
+
+
+            list_remove(opposite_chunk);
+
+            chunk = (Chunk*)MIN((uintptr_t)chunk, (uintptr_t)opposite_chunk);
+
+
+            assert(CHUNKS_GET_FLAG_ADD(chunk) == CHUNKS_PAGE_BUDDY);
+
+            CHUNKS_SET_STATUS_ADD(chunk, CHUNKS_PAGE_UNUSED);
+            assert(CHUNKS_GET_STATUS_ADD(chunk) == CHUNKS_PAGE_UNUSED);
+
+        } else {
+
+            list_insert(chunk);
+        }
+
+    }
+    spin_unlock(&buddys[idx].lk);
+
+    printf("buddy_free finished\n");
+
 }
