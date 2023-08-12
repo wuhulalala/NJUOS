@@ -23,7 +23,7 @@ int main() {
     for (int i = 0; i < 1000000; i++) {
         //int random = rand() % 4095 + 1;
         //int random_mem = (random) * PGSIZE + random;
-        int random_mem = 4096 * PGSIZE;
+        int random_mem = 2048 * PGSIZE;
         //printf("malloc %d page memory\n", random_mem / 4096);
         char *mem = pmm->alloc(random_mem); 
         assert(mem);
