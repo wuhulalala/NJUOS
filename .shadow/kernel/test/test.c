@@ -19,8 +19,17 @@ static void goodbye() {
 }
 int main() {
     pmm->init();
+    srand(time(NULL));
+    for (int i = 0; i < 10; i++) {
+        int random = rand() % 4095 + 2;
+        int random_mem = (random) * PGSIZE + random;
+        char *mem = pmm->alloc(random_mem); 
+        assert(mem);
+        pmm->free(mem); 
+
+    }
     printf("End\n");
-    for (int i = 0; i < 4; i++)
-    create(entry);
-    join(goodbye);
+    //for (int i = 0; i < 4; i++)
+    //create(entry);
+    //join(goodbye);
 }
