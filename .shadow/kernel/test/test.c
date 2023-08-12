@@ -28,6 +28,7 @@ int main() {
         assert(mem);
         pmm->free(mem); 
         //printf("free %d page memory\n", random_mem / 4096);
+        printf("finished %d round\n", i + 1);
 
     }
     printf("End\n");
