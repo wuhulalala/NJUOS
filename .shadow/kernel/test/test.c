@@ -7,7 +7,7 @@ static void entry(int tid) {
     srand(time(NULL));
     for (int i = 0; i < 10; i++) {
         int random = rand() % 4096 + 1;
-        int random_mem = (random - 1) * PASIZE + random;
+        int random_mem = (random - 1) * PGSIZE + random;
         char *mem = pmm->alloc(random_mem); 
         pmm->free(mem); 
 
