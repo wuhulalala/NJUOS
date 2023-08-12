@@ -167,6 +167,11 @@ void buddys_free(uintptr_t *pointer) {
 
     while (idx < buddys_size) {
         spin_lock(&buddys[idx].lk);
+
+        size = (size_t)((intptr_t)1 << idx) * PGSIZE;
+
+        assert(size >= PGSIZE && size <= MAXSIZE);
+
         Chunk *opposite_chunk = (Chunk *)((uintptr_t)(chunk) ^ (uintptr_t)size);
         if (CHUNKS_GET_STATUS_ADD(opposite_chunk) == CHUNKS_PAGE_UNUSED 
             && CHUNKS_GET_IDX_ADD(opposite_chunk) == idx && idx != buddys_size - 1) {
