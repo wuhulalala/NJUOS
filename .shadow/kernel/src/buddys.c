@@ -141,7 +141,7 @@ uintptr_t *buddys_malloc(size_t n) {
         baseline++;
 
     } 
-    printf("malloc %d page successful\n", 1 << debug);
+    //printf("malloc %d page successful\n", 1 << debug);
     assert(pointer);
     return (uintptr_t*)pointer;
 }
