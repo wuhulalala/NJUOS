@@ -174,14 +174,16 @@ void buddys_free(uintptr_t *pointer) {
             assert(CHUNKS_GET_STATUS_ADD(opposite_chunk) == CHUNKS_PAGE_UNUSED);
 
 
+
+            // 1 !!! do not change the block order of 1 and 2
+            list_remove(opposite_chunk);
+
+            // 2
             CHUNKS_SET_IDX_ADD(chunk, idx + 1);
             CHUNKS_SET_IDX_ADD(opposite_chunk, idx + 1);
 
             assert(CHUNKS_GET_IDX_ADD(chunk) == idx + 1);
             assert(CHUNKS_GET_IDX_ADD(opposite_chunk) == idx + 1);
-
-
-            list_remove(opposite_chunk);
 
             chunk = (Chunk*)MIN((uintptr_t)chunk, (uintptr_t)opposite_chunk);
 
