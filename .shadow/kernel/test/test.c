@@ -38,8 +38,8 @@ int main(int argc, char *argv[]) {
     switch(atoi(argv[1])) {
         case 0: do_test_0();
         case 1: do_test_1();
-        case 1: do_test_2();
-        case 1: do_test_3();
+        case 2: do_test_2();
+        case 3: do_test_3();
 }
 }
 void do_test_0() {
