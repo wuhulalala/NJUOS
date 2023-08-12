@@ -25,7 +25,9 @@ int main() {
         int random_mem = (random) * PGSIZE + random;
         //printf("malloc %d page memory\n", random_mem / 4096);
         char *mem = pmm->alloc(random_mem); 
-        //assert(mem);
+        if (!mem) {
+            printf("the random_mem is %d\n", random_mem);
+        }
         pmm->free(mem); 
         //printf("free %d page memory\n", random_mem / 4096);
         printf("finished %d round\n", i + 1);
