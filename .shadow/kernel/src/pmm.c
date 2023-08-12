@@ -6,6 +6,7 @@
 #include "chunks.h"
 Area heap = {};
 #endif
+// some global variables defined in the chunks.h
 uintptr_t *chunks = NULL;
 size_t chunks_size = 0;
 
@@ -13,10 +14,11 @@ uintptr_t *chunks_base = NULL;
 Chunk *buddys = NULL;
 size_t buddys_size = 0;
 
-
+// buddys function
 void buddys_init();
-
 uintptr_t *buddys_malloc(size_t n);
+void buddys_free(uintptr_t * pointer);
+
 static void *kalloc(size_t size) {
   uintptr_t *pointer = NULL;
   if (size >= 4 * PGSIZE) {
@@ -27,6 +29,7 @@ static void *kalloc(size_t size) {
 }
 
 static void kfree(void *ptr) {
+  buddys_free((uintptr_t*)ptr);
 }
 
 #ifndef TEST
