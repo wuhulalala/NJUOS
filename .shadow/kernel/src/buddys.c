@@ -92,6 +92,7 @@ uintptr_t *buddys_malloc(size_t n) {
     assert(actual_size);
     int idx = exponent - 12;
     int baseline = idx;
+    int debug = idx;
 
     assert(idx >= 0);
     Chunk *head = NULL, *pointer = NULL;
@@ -140,6 +141,7 @@ uintptr_t *buddys_malloc(size_t n) {
         baseline++;
 
     } 
+    printf("malloc %d page successful\n", 1 << debug);
     assert(pointer);
     return (uintptr_t*)pointer;
 }
@@ -155,7 +157,7 @@ void buddys_free(uintptr_t *pointer) {
     assert(CHUNKS_GET_STATUS_ADD(chunk) == CHUNKS_PAGE_UNUSED);
 
     int idx = CHUNKS_GET_IDX_ADD(chunk);
-
+    int debug = idx;
     assert(idx >= 0 && idx < buddys_size);
 
     size_t size = (size_t)((intptr_t)1 << idx) * PGSIZE;
@@ -200,6 +202,6 @@ void buddys_free(uintptr_t *pointer) {
 
     }
 
-    //printf("buddy_free finished\n");
+    printf("free %d page finished\n", 1 << debug);
 
 }
