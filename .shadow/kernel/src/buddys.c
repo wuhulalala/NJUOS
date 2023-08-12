@@ -33,7 +33,7 @@ void buddys_init() {
         //assert(iter);
         //list_remove((Chunk*)iter);
     //}
-    printf("buddys initial finished \n");
+    //printf("buddys initial finished \n");
     
 }
 
@@ -202,6 +202,6 @@ void buddys_free(uintptr_t *pointer) {
 
     }
 
-    printf("free %d page finished\n", 1 << debug);
+    //printf("free %d page finished\n", 1 << debug);
 
 }
