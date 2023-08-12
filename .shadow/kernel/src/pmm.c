@@ -22,7 +22,7 @@ static void *kalloc(size_t size) {
   if (size >= 4 * PGSIZE) {
     pointer = buddys_malloc(size);
   }
-  assert(pointer);
+  //assert(pointer);
   return (void*)pointer;
 }
 

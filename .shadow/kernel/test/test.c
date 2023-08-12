@@ -9,6 +9,7 @@ static void entry(int tid) {
         int random = rand() % 4096 + 1;
         int random_mem = (random - 1) * PGSIZE + random;
         char *mem = pmm->alloc(random_mem); 
+        assert(mem);
         pmm->free(mem); 
 
     }
