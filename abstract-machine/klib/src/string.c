@@ -12,7 +12,11 @@ size_t strlen(const char *s) {
 
 char *strcpy(char *dst, const char *src) {
   size_t index = 0;
-  while (src[index] != '\0') dst[index] = src[index];
+  while (src[index] != '\0') {
+	  dst[index] = src[index];
+	  index++;
+  }
+
   dst[index] = '\0';
   return dst;
 }
