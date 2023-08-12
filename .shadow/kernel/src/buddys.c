@@ -200,6 +200,6 @@ void buddys_free(uintptr_t *pointer) {
 
     }
 
-    printf("buddy_free finished\n");
+    //printf("buddy_free finished\n");
 
 }
