@@ -21,7 +21,7 @@ int main() {
     pmm->init();
     srand(time(NULL));
     for (int i = 0; i < 1000000; i++) {
-        int random = rand() % 4095 + 2;
+        int random_page = rand() % 4095 + 1;
         int random_mem = (random) * PGSIZE + random;
         //printf("malloc %d page memory\n", random_mem / 4096);
         char *mem = pmm->alloc(random_mem); 
