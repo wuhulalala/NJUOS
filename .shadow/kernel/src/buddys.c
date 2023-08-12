@@ -188,15 +188,15 @@ void buddys_free(uintptr_t *pointer) {
 
             CHUNKS_SET_STATUS_ADD(chunk, CHUNKS_PAGE_UNUSED);
             assert(CHUNKS_GET_STATUS_ADD(chunk) == CHUNKS_PAGE_UNUSED);
-            idx++;
 
         } else {
 
             list_insert(chunk);
+            spin_unlock(&buddys[idx].lk);
             break;
         }
-
         spin_unlock(&buddys[idx].lk);
+        idx++;
 
     }
 
