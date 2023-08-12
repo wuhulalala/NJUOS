@@ -29,10 +29,10 @@ void buddys_init() {
         list_insert((Chunk*)iter);
         spin_unlock(&buddys[CHUNKS_GET_IDX_ADD(iter)].lk);
     }
-    for (uintptr_t iter = (uintptr_t)chunks_base; iter + MAXSIZE < (uintptr_t)heap.end; iter += MAXSIZE) {
-        assert(iter);
-        list_remove((Chunk*)iter);
-    }
+    //for (uintptr_t iter = (uintptr_t)chunks_base; iter + MAXSIZE < (uintptr_t)heap.end; iter += MAXSIZE) {
+        //assert(iter);
+        //list_remove((Chunk*)iter);
+    //}
     printf("buddys initial finished \n");
     
 }
@@ -59,12 +59,12 @@ void list_insert(Chunk* chunk) {
     next -> prev = chunk;
     chunk -> next = next;
 
-    int count = 0;
-    for (Chunk *p = head -> next; p != head; p = p -> next, count ++) {
-        printf("this is the %d node of the list, the address is %p\n", count, (void *)p);
-    }
-    printf("------------------------------------\n");
-    assert(head);
+    //int count = 0;
+    //for (Chunk *p = head -> next; p != head; p = p -> next, count ++) {
+        //printf("this is the %d node of the list, the address is %p\n", count, (void *)p);
+    //}
+    //printf("------------------------------------\n");
+    //assert(head);
 }
 
 void list_remove(Chunk *chunk) {
