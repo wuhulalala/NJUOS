@@ -1,5 +1,15 @@
 #include <am.h>
 #include "chunks.h"
+#ifdef TEST
+#define _GNU_SOURCE
+//#include <stdio.h>
+#include <stdlib.h>
+#include <sched.h>
+#include <unistd.h>
+#define cpu_count() sysconf(_SC_NPROCESSORS_ONLN)
+#define cpu_current() sched_getcpu()
+#endif
+
 #define MINSIZE 1
 #define SLABS_CPU(i) sla_b##i
 void slabs_init();
