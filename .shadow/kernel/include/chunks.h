@@ -37,6 +37,8 @@ size_t chunks_size;
 uintptr_t *chunks_base;
 Chunk *buddys;
 size_t buddys_size;
+
+spinlock_t lk;
 // some helpful marcos
 #define CHUNKS_STATUS_SIZE (1)
 #define CHUNKS_FLAG_SIZE (1)

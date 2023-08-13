@@ -19,7 +19,7 @@ void buddys_init() {
         #endif
         
     }
-
+    pthread_mutex_init(&lk);
     for (uintptr_t iter = (uintptr_t)chunks_base; iter + MAXSIZE < (uintptr_t)heap.end; iter += MAXSIZE) {
         CHUNKS_SET_IDX_ADD(iter, buddys_size - 1);
         CHUNKS_SET_FLAG_ADD(iter, CHUNKS_PAGE_BUDDY);
@@ -120,7 +120,7 @@ uintptr_t *buddys_malloc(size_t n) {
 
     assert(CHUNKS_GET_FLAG_ADD((uintptr_t)pointer) == CHUNKS_PAGE_BUDDY);
     assert(CHUNKS_GET_STATUS_ADD((uintptr_t)pointer) == CHUNKS_PAGE_INUSE);
-
+    spin_lock(&lk);
     Chunk *temp = NULL;
     while (idx > baseline) {
         temp = (Chunk *)((uintptr_t)pointer +  (uintptr_t)(((uintptr_t)1 << baseline) * PGSIZE));
@@ -141,6 +141,7 @@ uintptr_t *buddys_malloc(size_t n) {
         baseline++;
 
     } 
+    spin_unlock(&lk);
     printf("malloc %d page successful\n", 1 << debug);
     assert(pointer);
     return (uintptr_t*)pointer;
