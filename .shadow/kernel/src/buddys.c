@@ -101,7 +101,7 @@ uintptr_t *buddys_malloc(size_t n) {
         spin_lock(&buddys[idx].lk);
         head = &buddys[idx];
         if (head != head -> next) break;
-        spin_lock(&buddys[idx].lk);
+        spin_unlock(&buddys[idx].lk);
         idx++;
     }
     if (idx == buddys_size) {
