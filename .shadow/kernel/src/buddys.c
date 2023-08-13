@@ -87,6 +87,7 @@ void list_remove(Chunk *chunk) {
 }
 
 uintptr_t *buddys_malloc(size_t n) {
+    spin_lock(&buddys[idx].lk);
     size_t exponent = log_n(n);
     size_t actual_size = mem_request2_size(n);
     assert(actual_size);
@@ -105,7 +106,6 @@ uintptr_t *buddys_malloc(size_t n) {
         return NULL;
     }
 
-    spin_lock(&buddys[idx].lk);
     pointer = buddys[idx].next;
     assert(pointer);
     list_remove(pointer); 
@@ -148,6 +148,7 @@ uintptr_t *buddys_malloc(size_t n) {
 }
 
 void buddys_free(uintptr_t *pointer) {
+    spin_lock(&lk);
     Chunk *chunk = (Chunk *)pointer;
     assert(chunk);
 
@@ -166,7 +167,6 @@ void buddys_free(uintptr_t *pointer) {
     assert(size >= PGSIZE && size <= MAXSIZE);
 
 
-    spin_lock(&lk);
     while (idx < buddys_size) {
         spin_lock(&buddys[idx].lk);
 
