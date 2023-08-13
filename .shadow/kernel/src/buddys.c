@@ -151,7 +151,7 @@ uintptr_t *buddys_malloc(size_t n) {
 }
 
 void buddys_free(uintptr_t *pointer) {
-    //spin_lock(&lk);
+    spin_lock(&lk);
     Chunk *chunk = (Chunk *)pointer;
     assert(chunk);
 
@@ -210,10 +210,10 @@ void buddys_free(uintptr_t *pointer) {
         spin_lock(&buddys[idx].lk);
 
     }
-    //spin_unlock(&lk);
     list_insert(chunk);
     spin_unlock(&buddys[idx].lk);
 
+    spin_unlock(&lk);
     printf("free %d page finished\n", 1 << debug);
 
 }
