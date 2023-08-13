@@ -19,4 +19,5 @@ uintptr_t try_lock(spinlock_t *lk) {
 #else
 void spin_lock(spinlock_t *lk)   { pthread_mutex_lock(lk); }
 void spin_unlock(spinlock_t *lk) { pthread_mutex_unlock(lk); }
+int  try_lock(spinlock_t *lk) { return = pthread_mutex_trylock(lk);}
 #endif
