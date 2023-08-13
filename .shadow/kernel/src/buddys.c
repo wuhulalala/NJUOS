@@ -93,7 +93,6 @@ uintptr_t *buddys_malloc(size_t n) {
     int idx = exponent - 12;
     int baseline = idx;
     int debug = idx;
-    //spin_lock(&lk);
 
     assert(idx >= 0);
     Chunk *head = NULL, *pointer = NULL;
@@ -112,6 +111,7 @@ uintptr_t *buddys_malloc(size_t n) {
     list_remove(pointer); 
     spin_unlock(&buddys[idx].lk);
 
+    spin_lock(&lk);
     assert(CHUNKS_GET_FLAG_ADD((uintptr_t)pointer) != CHUNKS_PAGE_SLAB);
     assert(CHUNKS_GET_STATUS_ADD((uintptr_t)pointer) != CHUNKS_PAGE_INUSE);
 
@@ -141,7 +141,7 @@ uintptr_t *buddys_malloc(size_t n) {
         baseline++;
 
     } 
-    //spin_unlock(&lk);
+    spin_unlock(&lk);
     printf("malloc %d page successful\n", 1 << debug);
     assert(pointer);
     return (uintptr_t*)pointer;
