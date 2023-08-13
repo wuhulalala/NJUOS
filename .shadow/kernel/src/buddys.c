@@ -109,7 +109,7 @@ uintptr_t *buddys_malloc(size_t n) {
     if (idx == buddys_size) {
         return NULL;
     }
-    spin_unlock(&buddys[idx].lk);
+    //spin_unlock(&buddys[idx].lk);
 
     //spin_lock(&buddys[idx].lk);
     pointer = buddys[idx].next;
