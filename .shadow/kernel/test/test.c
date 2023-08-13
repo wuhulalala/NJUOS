@@ -4,26 +4,30 @@
 #include <time.h>
 #define PGSIZE 4096
 #define NTHREAD 4
-static void entry1(int tid) { 
+static void entry1(int id) { 
     srand(time(NULL));
     for (int i = 0; i < 1000000; i++) {
         int random = rand() % 4095 + 1;
         int random_mem = (random) * PGSIZE + random;
         char *mem = pmm->alloc(random_mem); 
+        printf("thread %d malloc success\n", id);
         assert(mem);
         pmm->free(mem); 
+        printf("thread %d free success\n", id);
 
     }
 }
 
-static void entry2(int tid) { 
+static void entry2(int id) { 
     srand(time(NULL));
     for (int i = 0; i < 1000000; i++) {
         int random = rand() % 16 + 1;
         int random_mem = (random) * PGSIZE + random;
         char *mem = pmm->alloc(random_mem); 
+        printf("thread %d malloc success\n", id);
         assert(mem);
         pmm->free(mem); 
+        printf("thread %d free success\n", id);
 
     }
 }
