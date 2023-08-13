@@ -168,7 +168,7 @@ void buddys_free(uintptr_t *pointer) {
 
 
     while (idx < buddys_size) {
-        spin_lock(&buddys[idx].lk);
+        //spin_lock(&buddys[idx].lk);
 
         size = (size_t)((intptr_t)1 << idx) * PGSIZE;
 
@@ -210,7 +210,7 @@ void buddys_free(uintptr_t *pointer) {
         idx++;
 
     }
-    spin_unlock(&lk);
+    //spin_unlock(&lk);
 
     printf("free %d page finished\n", 1 << debug);
 
