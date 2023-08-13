@@ -95,6 +95,7 @@ uintptr_t *buddys_malloc(size_t n) {
     int debug = idx;
 
     assert(idx >= 0);
+    spin_lock(&lk);
     Chunk *head = NULL, *pointer = NULL;
     while (idx < buddys_size) {
         spin_lock(&buddys[idx].lk);
@@ -114,7 +115,6 @@ uintptr_t *buddys_malloc(size_t n) {
     }
 
 
-    spin_lock(&lk);
     assert(CHUNKS_GET_FLAG_ADD((uintptr_t)pointer) != CHUNKS_PAGE_SLAB);
     assert(CHUNKS_GET_STATUS_ADD((uintptr_t)pointer) != CHUNKS_PAGE_INUSE);
 
