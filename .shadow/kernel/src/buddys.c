@@ -98,10 +98,13 @@ uintptr_t *buddys_malloc(size_t n) {
     assert(idx >= 0);
     Chunk *head = NULL, *pointer = NULL;
     while (idx < buddys_size) {
-        //spin_lock(&buddys[idx].lk);
+        spin_lock(&buddys[idx].lk);
         head = &buddys[idx];
-        if (head != head -> next) break;
-        //spin_unlock(&buddys[idx].lk);
+        if (head != head -> next) {
+            spin_unlock(&buddys[idx].lk);
+            break;
+        }
+        spin_unlock(&buddys[idx].lk);
         idx++;
     }
     if (idx == buddys_size) {
