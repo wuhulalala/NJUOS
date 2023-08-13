@@ -114,3 +114,15 @@ void do_buddy_test_3() {
 void do_slab_test_0() {
     
 }
+
+void do_slab_test_1() {
+    
+}
+
+void do_slab_test_2() {
+    
+}
+
+void do_slab_test_3() {
+    
+}
