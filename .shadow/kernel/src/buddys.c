@@ -19,7 +19,7 @@ void buddys_init() {
         #endif
         
     }
-    pthread_mutex_init(&lk);
+    pthread_mutex_init(&lk, NULL);
     for (uintptr_t iter = (uintptr_t)chunks_base; iter + MAXSIZE < (uintptr_t)heap.end; iter += MAXSIZE) {
         CHUNKS_SET_IDX_ADD(iter, buddys_size - 1);
         CHUNKS_SET_FLAG_ADD(iter, CHUNKS_PAGE_BUDDY);
