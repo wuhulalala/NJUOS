@@ -148,7 +148,7 @@ uintptr_t *buddys_malloc(size_t n) {
 }
 
 void buddys_free(uintptr_t *pointer) {
-    spin_lock(&lk);
+    //spin_lock(&lk);
     Chunk *chunk = (Chunk *)pointer;
     assert(chunk);
 
@@ -168,7 +168,7 @@ void buddys_free(uintptr_t *pointer) {
 
 
     while (idx < buddys_size) {
-        //spin_lock(&buddys[idx].lk);
+        spin_lock(&buddys[idx].lk);
 
         size = (size_t)((intptr_t)1 << idx) * PGSIZE;
 
