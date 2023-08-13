@@ -39,14 +39,24 @@ static void goodbye() {
 int main(int argc, char *argv[]) {
     if (argc < 2) exit(1);
     pmm->init();
+    #ifdef BUDDY
     switch(atoi(argv[1])) {
-        case 0: do_test_0();
-        case 1: do_test_1();
-        case 2: do_test_2();
-        case 3: do_test_3();
+        case 0: do_buddy_test_0();
+        case 1: do_buddy_test_1();
+        case 2: do_buddy_test_2();
+        case 3: do_buddy_test_3();
+    }
+    #endif
+    #ifdef SLAB
+    switch(atoi(argv[1])) {
+        case 0: do_slab_test_0();
+        case 1: do_slab_test_1();
+        case 2: do_slab_test_2();
+        case 3: do_slab_test_3();
+    }
+    #endif
 }
-}
-void do_test_0() {
+void do_buddy_test_0() {
     srand(time(NULL));
     for (int i = 0; i < 1000000; i++) {
         int random = rand() % 4095 + 1;
@@ -66,7 +76,7 @@ void do_test_0() {
     //create(entry);
     //join(goodbye);
 }
-void do_test_1() {
+void do_buddy_test_1() {
 
     srand(time(NULL));
     for (int i = 0; i < 1000000; i++) {
@@ -85,7 +95,7 @@ void do_test_1() {
     printf("End\n");
 }
 
-void do_test_2() {
+void do_buddy_test_2() {
 
     for (int t = 0; t < NTHREAD; t++) {
         create(entry1);
@@ -93,10 +103,14 @@ void do_test_2() {
     join(goodbye);
 }
 
-void do_test_3() {
+void do_buddy_test_3() {
 
     for (int t = 0; t < NTHREAD; t++) {
         create(entry2);
     }
     join(goodbye);
+}
+
+void do_slab_test_0() {
+    
 }
