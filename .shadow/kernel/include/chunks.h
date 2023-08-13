@@ -29,6 +29,7 @@ typedef struct Chunk {
     struct Chunk *prev;
     struct Chunk *next; 
     spinlock_t lk; 
+    size_t cpu;
 }Chunk;
 
 uintptr_t *chunks;
@@ -37,6 +38,10 @@ size_t chunks_size;
 uintptr_t *chunks_base;
 Chunk *buddys;
 size_t buddys_size;
+
+Chunk *slabs;
+size_t slabs_size;
+
 
 spinlock_t lk;
 // some helpful marcos

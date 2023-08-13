@@ -19,7 +19,11 @@ void buddys_init() {
         #endif
         
     }
+    #ifdef TEST
     pthread_mutex_init(&lk, NULL);
+    #else
+    lk = SPIN_INIT();
+    #endif
     for (uintptr_t iter = (uintptr_t)chunks_base; iter + MAXSIZE < (uintptr_t)heap.end; iter += MAXSIZE) {
         CHUNKS_SET_IDX_ADD(iter, buddys_size - 1);
         CHUNKS_SET_FLAG_ADD(iter, CHUNKS_PAGE_BUDDY);
@@ -72,7 +76,7 @@ void list_remove(Chunk *chunk) {
     panic_on(try_lock(&buddys[CHUNKS_GET_IDX_ADD(chunk)].lk) == UNLOCKED, "Did not get the lock before the remove");
     #endif
     assert(chunk -> next != chunk);
-    Chunk* head = &buddys[CHUNKS_GET_IDX_ADD(chunk)];
+    //Chunk* head = &buddys[CHUNKS_GET_IDX_ADD(chunk)];
     Chunk *next = chunk -> next, *prev = chunk -> prev;
     prev -> next = next;
     next -> prev = prev;

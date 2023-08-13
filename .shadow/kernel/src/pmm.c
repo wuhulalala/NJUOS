@@ -19,6 +19,13 @@ void buddys_init();
 uintptr_t *buddys_malloc(size_t n);
 void buddys_free(uintptr_t * pointer);
 
+// slabs function
+void slabs_init();
+uintptr_t *slabs_malloc(size_t n);
+void slabs_free(uintptr_t * pointer);
+
+
+
 static void *kalloc(size_t size) {
   uintptr_t *pointer = NULL;
   if (size >= PGSIZE) {
@@ -32,6 +39,8 @@ static void kfree(void *ptr) {
   buddys_free((uintptr_t*)ptr);
 }
 
+
+
 #ifndef TEST
 // 框架代码中的 pmm_init (在 AbstractMachine 中运行)
 static void pmm_init() {
@@ -42,6 +51,7 @@ static void pmm_init() {
   chunks_size = (((uintptr_t)heap.end - (uintptr_t)heap.start) + PGSIZE - 1) / PGSIZE;
   printf("the chunks is [%p, %p), the chunks size is %d\n", (uintptr_t)chunks, (uintptr_t)(chunks) + (uintptr_t)(chunks_size) * PGSIZE, chunks_size); 
   buddys_init();
+  slabs_init();
 }
 #else
  // 测代码的 pmm_init ()
@@ -64,6 +74,7 @@ static void pmm_init() {
   //printf("the index is %p, the flag is %ld, the status is %ld\n", CHUNKS_GETIDX_ADD(chunks + 10), CHUNKS_GETFLAG_ADD(chunks + 10), CHUNKS_GETSTATUS_ADD(chunks + 10));
   //printf("the chunks is [%p, %p), the chunks size is %d\n", (uintptr_t)chunks, (uintptr_t)(chunks) + (uintptr_t)(chunks_size) * PGSIZE, chunks_size); 
   buddys_init();
+  slabs_init();
 }
 #endif
 MODULE_DEF(pmm) = {
