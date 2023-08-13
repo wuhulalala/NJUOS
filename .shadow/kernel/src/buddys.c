@@ -164,7 +164,6 @@ void buddys_free(uintptr_t *pointer) {
     int idx = CHUNKS_GET_IDX_ADD(chunk);
     int debug = idx;
     assert(idx >= 0 && idx < buddys_size);
-    Chunk *head = &buddys[idx];
 
     size_t size = (size_t)((intptr_t)1 << idx) * PGSIZE;
 
@@ -205,8 +204,6 @@ void buddys_free(uintptr_t *pointer) {
 
         } else {
 
-            list_insert(chunk);
-            spin_unlock(&buddys[idx].lk);
             break;
         }
         idx++;
@@ -214,6 +211,8 @@ void buddys_free(uintptr_t *pointer) {
 
     }
     //spin_unlock(&lk);
+    list_insert(chunk);
+    spin_unlock(&buddys[idx].lk);
 
     printf("free %d page finished\n", 1 << debug);
 
