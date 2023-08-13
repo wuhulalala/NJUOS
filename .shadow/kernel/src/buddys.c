@@ -114,7 +114,7 @@ uintptr_t *buddys_malloc(size_t n) {
     }
 
 
-    spin_lock(&lk);
+    //spin_lock(&lk);
     assert(CHUNKS_GET_FLAG_ADD((uintptr_t)pointer) != CHUNKS_PAGE_SLAB);
     assert(CHUNKS_GET_STATUS_ADD((uintptr_t)pointer) != CHUNKS_PAGE_INUSE);
 
@@ -144,14 +144,14 @@ uintptr_t *buddys_malloc(size_t n) {
         baseline++;
 
     } 
-    spin_unlock(&lk);
+    //spin_unlock(&lk);
     printf("malloc %d page successful\n", 1 << debug);
     assert(pointer);
     return (uintptr_t*)pointer;
 }
 
 void buddys_free(uintptr_t *pointer) {
-    spin_lock(&lk);
+    //spin_lock(&lk);
     Chunk *chunk = (Chunk *)pointer;
     assert(chunk);
 
@@ -164,14 +164,14 @@ void buddys_free(uintptr_t *pointer) {
     int idx = CHUNKS_GET_IDX_ADD(chunk);
     int debug = idx;
     assert(idx >= 0 && idx < buddys_size);
+    Chunk *head = &buddys[idx];
 
     size_t size = (size_t)((intptr_t)1 << idx) * PGSIZE;
 
     assert(size >= PGSIZE && size <= MAXSIZE);
-
+    spin_lock(&buddys[idx].lk);
 
     while (idx < buddys_size) {
-        spin_lock(&buddys[idx].lk);
 
         size = (size_t)((intptr_t)1 << idx) * PGSIZE;
 
@@ -187,7 +187,6 @@ void buddys_free(uintptr_t *pointer) {
 
             // 1 !!! do not change the block order of 1 and 2
             list_remove(opposite_chunk);
-
             // 2
             CHUNKS_SET_IDX_ADD(chunk, idx + 1);
             CHUNKS_SET_IDX_ADD(opposite_chunk, idx + 1);
@@ -197,6 +196,7 @@ void buddys_free(uintptr_t *pointer) {
 
             chunk = (Chunk*)MIN((uintptr_t)chunk, (uintptr_t)opposite_chunk);
 
+            spin_unlock(&buddys[idx].lk);
 
             assert(CHUNKS_GET_FLAG_ADD(chunk) == CHUNKS_PAGE_BUDDY);
 
@@ -209,11 +209,11 @@ void buddys_free(uintptr_t *pointer) {
             spin_unlock(&buddys[idx].lk);
             break;
         }
-        spin_unlock(&buddys[idx].lk);
         idx++;
+        spin_lock(&buddys[idx].lk);
 
     }
-    spin_unlock(&lk);
+    //spin_unlock(&lk);
 
     printf("free %d page finished\n", 1 << debug);
 
