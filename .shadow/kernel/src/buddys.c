@@ -52,11 +52,13 @@ void list_insert(Chunk* chunk) {
     
     case CHUNKS_PAGE_SLAB :
     // to do
+        head = &slabs[CHUNKS_GET_IDX_ADD(chunk)];
+        assert(head);
         break;
     }
-    #ifndef TEST
-    panic_on(try_lock(&buddys[CHUNKS_GET_IDX_ADD(chunk)].lk) == UNLOCKED, "Did not get the lock before the insert");
-    #endif
+    //#ifndef TEST
+    //panic_on(try_lock(&buddys[CHUNKS_GET_IDX_ADD(chunk)].lk) == UNLOCKED, "Did not get the lock before the insert");
+    //#endif
     Chunk *next = head -> next;
     head -> next = chunk;
     chunk -> prev = head;
@@ -72,9 +74,20 @@ void list_insert(Chunk* chunk) {
 }
 
 void list_remove(Chunk *chunk) {
-    #ifndef TEST
-    panic_on(try_lock(&buddys[CHUNKS_GET_IDX_ADD(chunk)].lk) == UNLOCKED, "Did not get the lock before the remove");
-    #endif
+    switch (CHUNKS_GET_FLAG_ADD(chunk)) {
+    case CHUNKS_PAGE_BUDDY :
+        #ifndef TEST
+        panic_on(try_lock(&buddys[CHUNKS_GET_IDX_ADD(chunk)].lk) == UNLOCKED, "Did not get the lock before the remove");
+        #endif
+        break;
+    
+    case CHUNKS_PAGE_SLAB :
+    // to do
+        #ifndef TEST
+        panic_on(try_lock(&slabs[CHUNKS_GET_IDX_ADD(chunk)].lk) == UNLOCKED, "Did not get the lock before the remove");
+        #endif
+        break;
+    }
     assert(chunk -> next != chunk);
     //Chunk* head = &buddys[CHUNKS_GET_IDX_ADD(chunk)];
     Chunk *next = chunk -> next, *prev = chunk -> prev;
