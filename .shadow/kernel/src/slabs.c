@@ -47,10 +47,9 @@ uintptr_t *slabs_malloc(size_t n) {
     int default_cpu = cpu;
     Chunk *rc = NULL, *slabs_i = NULL;
     do {
-        current_cpu = cpu_current();
-        Chunk *slabs_i = (Chunk*)((uintptr_t)slabs + (uintptr_t)(sizeof(Chunk) * slabs_size * current_cpu));
-        assert(((uintptr_t)slabs_i - (uintptr_t)slabs) == sizeof(Chunk) * slabs_size * current_cpu);
-        if (cpu == current_cpu) {spin_lock(&slabs_i[idx].lk);}
+        Chunk *slabs_i = (Chunk*)((uintptr_t)slabs + (uintptr_t)(sizeof(Chunk) * slabs_size * cpu));
+        assert(((uintptr_t)slabs_i - (uintptr_t)slabs) == sizeof(Chunk) * slabs_size * cpu);
+        if (cpu == cpu_current()) {spin_lock(&slabs_i[idx].lk);}
         else {
             if (try_lock(&slabs_i[idx].lk) == LOCKED) {
                 goto Go_to_next_cpu;
