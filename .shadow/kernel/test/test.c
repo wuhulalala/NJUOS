@@ -127,11 +127,11 @@ void do_slab_test_0() {
     srand(time(NULL));
     char *mem = pmm -> alloc(790);
     pmm -> free(mem);
-    char *mem = pmm -> alloc(3685);
+    mem = pmm -> alloc(3685);
     pmm -> free(mem);
-    char *mem = pmm -> alloc(790);
+    mem = pmm -> alloc(790);
     pmm -> free(mem);
-    char *mem = pmm -> alloc(2839);
+    mem = pmm -> alloc(2839);
     pmm -> free(mem);
 
     
