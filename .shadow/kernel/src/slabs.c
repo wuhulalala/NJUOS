@@ -50,6 +50,7 @@ uintptr_t *slabs_malloc(size_t n) {
     int cpu = cpu_current();
     int default_cpu = cpu;
     Chunk *rc = NULL, *slabs_i = NULL;
+    spin_lock(&slab_lk);
     do {
         slabs_i = (Chunk*)((uintptr_t)slabs + (uintptr_t)(sizeof(Chunk) * slabs_size * cpu));
         assert(((uintptr_t)slabs_i - (uintptr_t)slabs) == sizeof(Chunk) * slabs_size * cpu);
@@ -114,10 +115,12 @@ Go_to_next_cpu:
 
 
     }
+    spin_unlock(&slab_lk);
     return (uintptr_t *)rc;
 }
 
 void slabs_free(uintptr_t * pointer) {
+    spin_lock(&slab_lk);
     assert(pointer);
     Chunk *chunk = (Chunk *)pointer;
     assert(chunk);
@@ -131,4 +134,5 @@ void slabs_free(uintptr_t * pointer) {
     spin_lock(&slabs_i[idx].lk);
     list_insert((Chunk*)pointer);
     spin_unlock(&slabs_i[idx].lk);
+    spin_unlock(&slab_lk);
 }
