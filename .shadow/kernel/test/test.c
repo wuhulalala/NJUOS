@@ -152,7 +152,7 @@ void do_slab_test_0() {
 
 void do_slab_test_1() {
     srand(time(NULL));
-    char *mem = pmm->alloc(random); 
+    char *mem = pmm->alloc(1); 
     pmm->free(mem); 
     for (int i = 0; i < 10000000; i++) {
         int random = rand() % (PGSIZE);
