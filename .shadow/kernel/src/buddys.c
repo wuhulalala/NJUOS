@@ -133,7 +133,7 @@ uintptr_t *buddys_malloc(size_t n) {
     }
 
 
-    //assert(CHUNKS_GET_FLAG_ADD((uintptr_t)pointer) != CHUNKS_PAGE_SLAB);
+    assert(CHUNKS_GET_FLAG_ADD((uintptr_t)pointer) != CHUNKS_PAGE_SLAB);
     assert(CHUNKS_GET_STATUS_ADD((uintptr_t)pointer) != CHUNKS_PAGE_INUSE);
 
     CHUNKS_SET_IDX_ADD(pointer, baseline);
