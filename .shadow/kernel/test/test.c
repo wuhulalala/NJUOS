@@ -11,12 +11,14 @@ static void entry1(int id) {
         int random = rand() % 4095 + 1;
         int random_mem = (random) * PGSIZE + random;
         char *mem = pmm->alloc(random_mem); 
-        printf("thread %d malloc success\n", id);
+        //printf("thread %d malloc success\n", id);
         assert(mem);
         pmm->free(mem); 
-        printf("thread %d free success\n", id);
+        //printf("thread %d free success\n", id);
 
     }
+    printf("test 3 finished\n");
+
 }
 
 static void entry2(int id) { 
@@ -25,12 +27,13 @@ static void entry2(int id) {
         int random = rand() % 16 + 1;
         int random_mem = (random) * PGSIZE + random;
         char *mem = pmm->alloc(random_mem); 
-        printf("thread %d malloc success\n", id);
+        //printf("thread %d malloc success\n", id);
         assert(mem);
         pmm->free(mem); 
-        printf("thread %d free success\n", id);
+        //printf("thread %d free success\n", id);
 
     }
+    printf("test 4 finished\n");
 }
 
 static void goodbye() { 
@@ -72,14 +75,14 @@ void do_buddy_test_0() {
     for (int i = 0; i < 1000000; i++) {
         int random = rand() % 4095 + 1;
         int random_mem = (random) * PGSIZE + random;
-        printf("malloc %d page memory\n", random_mem / 4096);
+        //printf("malloc %d page memory\n", random_mem / 4096);
         char *mem = pmm->alloc(random_mem); 
         if (!mem) {
             printf("the random_mem is %d\n", random_mem);
         }
         pmm->free(mem); 
         //printf("free %d page memory\n", random_mem / 4096);
-        printf("finished %d round\n", i + 1);
+        //printf("finished %d round\n", i + 1);
 
     }
     pmm -> free(temp);
@@ -94,17 +97,17 @@ void do_buddy_test_1() {
     for (int i = 0; i < 1000000; i++) {
         int random = rand() % 16 + 1;
         int random_mem = (random) * PGSIZE + random;
-        printf("malloc %d page memory\n", random_mem / 4096);
+        //printf("malloc %d page memory\n", random_mem / 4096);
         char *mem = pmm->alloc(random_mem); 
         if (!mem) {
             printf("the random_mem is %d\n", random_mem);
         }
         pmm->free(mem); 
         //printf("free %d page memory\n", random_mem / 4096);
-        printf("finished %d round\n", i + 1);
+        //printf("finished %d round\n", i + 1);
 
     }
-    printf("End\n");
+    printf("test 1 finished\n");
 }
 
 void do_buddy_test_2() {
