@@ -10,7 +10,7 @@
 #define cpu_current() sched_getcpu()
 #endif
 
-#define MINSIZE 64
+#define MINSIZE 56
 #define SLABS_CPU(i) sla_b##i
 void slabs_init();
 uintptr_t *slabs_malloc(size_t n);
