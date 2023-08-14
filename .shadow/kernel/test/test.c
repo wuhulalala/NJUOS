@@ -8,17 +8,18 @@
 #define MAXSIZE (16 << 20)
 static void entry1(int id) { 
     srand(time(NULL));
-    for (int i = 0; i < 1000000; i++) {
-        int random = rand() % 4095 + 1;
-        int random_mem = (random) * PGSIZE + random;
-        char *mem = pmm->alloc(random_mem); 
-        //printf("thread %d malloc success\n", id);
-        assert(mem);
+    for (int i = 0; i < 10000000; i++) {
+        int random = rand() % (MAXSIZE - MINSIZE) + MINSIZE;
+        //printf("malloc %d bytes memory\n", random);
+        char *mem = pmm->alloc(random); 
+        if (!mem) {
+            printf("the random_mem is %d\n", random);
+        }
         pmm->free(mem); 
-        //printf("thread %d free success\n", id);
-
-    }
-    printf("test 3 finished\n");
+        //printf("free %d bytes memory\n", random);
+        //printf("finished %d round\n", i + 1);
+    } 
+    printf("thread %d finished\n");
 
 }
 
@@ -44,7 +45,6 @@ static void goodbye() {
 int main(int argc, char *argv[]) {
     if (argc < 2) exit(1);
     pmm->init();
-    printf("test 3 finished\n");
     #ifdef BUDDY
     switch(atoi(argv[1])) {
         case 0: do_buddy_test_0();
@@ -168,7 +168,10 @@ void do_slab_test_1() {
 }
 
 void do_slab_test_2() {
-    
+    for (int t = 0; t < NTHREAD; t++) {
+        create(entry1);
+    }
+    join(goodbye);
 }
 
 void do_slab_test_3() {
