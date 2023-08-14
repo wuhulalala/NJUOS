@@ -30,15 +30,24 @@ static void *kalloc(size_t size) {
   uintptr_t *pointer = NULL;
   if (size >= PGSIZE) {
     pointer = buddys_malloc(size);
+    assert(pointer);
   } else {
     pointer = slabs_malloc(size);
+    assert(pointer);
   }
   //assert(pointer);
   return (void*)pointer;
 }
 
 static void kfree(void *ptr) {
-  buddys_free((uintptr_t*)ptr);
+  assert(ptr);
+  if (CHUNKS_GET_FLAG_ADD(ptr) == CHUNKS_PAGE_SLAB) {
+    slabs_free(ptr);
+  } else if (CHUNKS_GET_FLAG_ADD(ptr) == CHUNKS_PAGE_BUDDY){
+    buddys_free((uintptr_t*)ptr);
+  } else {
+    printf("free fail, wrong address\n");
+  }
 }
 
 
