@@ -9,7 +9,7 @@
 static void entry1(int id) { 
     srand(time(NULL));
     for (int i = 0; i < 10000000; i++) {
-        int random = rand() % (MAXSIZE - MINSIZE) + MINSIZE;
+        int random = rand() % (4 * PGSIZE - MINSIZE) + MINSIZE;
         printf("thread %d malloc %d bytes memory\n", id, random);
         char *mem = pmm->alloc(random); 
         if (!mem) {
