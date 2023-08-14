@@ -42,25 +42,25 @@ int main(int argc, char *argv[]) {
     #ifdef BUDDY
     switch(atoi(argv[1])) {
         case 0: do_buddy_test_0();
-                break
+                break;
         case 1: do_buddy_test_1();
-                break
+                break;
         case 2: do_buddy_test_2();
-                break
+                break;
         case 3: do_buddy_test_3();
-                break
+                break;
     }
     #endif
     #ifdef SLAB
     switch(atoi(argv[1])) {
         case 0: do_slab_test_0();
-                break
+                break;
         case 1: do_slab_test_1();
-                break
+                break;
         case 2: do_slab_test_2();
-                break
+                break;
         case 3: do_slab_test_3();
-                break
+                break;
     }
     #endif
 }
