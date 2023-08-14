@@ -135,18 +135,18 @@ void do_slab_test_0() {
     pmm -> free(mem);
 
     
-    //for (int i = 0; i < 1000000; i++) {
-        //int random = rand() % (PGSIZE - MINSIZE) + MINSIZE;
-        //printf("malloc %d bytes memory\n", random);
-        //char *mem = pmm->alloc(random); 
-        //if (!mem) {
-            //printf("the random_mem is %d\n", random);
-        //}
-        //pmm->free(mem); 
-        //printf("free %d bytes memory\n", random);
-        //printf("finished %d round\n", i + 1);
+    for (int i = 0; i < 1000000; i++) {
+        int random = rand() % (PGSIZE - MINSIZE) + MINSIZE;
+        printf("malloc %d bytes memory\n", random);
+        char *mem = pmm->alloc(random); 
+        if (!mem) {
+            printf("the random_mem is %d\n", random);
+        }
+        pmm->free(mem); 
+        printf("free %d bytes memory\n", random);
+        printf("finished %d round\n", i + 1);
 
-    //}
+    }
     printf("End\n");
 }
 
