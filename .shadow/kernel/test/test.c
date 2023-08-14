@@ -57,6 +57,8 @@ int main(int argc, char *argv[]) {
     #endif
 }
 void do_buddy_test_0() {
+    char *temp = pmm -> alloc(PGSIZE);
+
     srand(time(NULL));
     for (int i = 0; i < 1000000; i++) {
         int random = rand() % 4095 + 1;
@@ -71,6 +73,7 @@ void do_buddy_test_0() {
         printf("finished %d round\n", i + 1);
 
     }
+    pmm -> free(temp);
     printf("test 0 finished\n");
     //for (int i = 0; i < 4; i++)
     //create(entry);

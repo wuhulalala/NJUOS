@@ -90,7 +90,7 @@ Go_to_next_cpu:
         assert(CHUNKS_GET_IDX_ADD(rc) == idx);
         assert(CHUNKS_GET_FLAG_ADD(rc) == CHUNKS_PAGE_SLAB);
 
-        for (Chunk *t = rc; (uintptr_t)t < (uintptr_t)t + (uintptr_t)PGSIZE; t = (Chunk *)((uintptr_t)t + ((uintptr_t)1 << idx))) {
+        for (Chunk *t = rc; (uintptr_t)t < (uintptr_t)rc + (uintptr_t)PGSIZE; t = (Chunk *)((uintptr_t)t + ((uintptr_t)1 << idx))) {
             spin_lock(&slabs_i[idx].lk);
             list_insert((Chunk*)t);
             t -> cpu = cpu; 
