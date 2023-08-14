@@ -10,13 +10,13 @@ static void entry1(int id) {
     srand(time(NULL));
     for (int i = 0; i < 10000000; i++) {
         int random = rand() % (4 * PGSIZE - MINSIZE) + MINSIZE;
-        printf("thread %d malloc %d bytes memory\n", id, random);
+        //printf("thread %d malloc %d bytes memory\n", id, random);
         char *mem = pmm->alloc(random); 
         if (!mem) {
             printf("the random_mem is %d\n", random);
         }
         pmm->free(mem); 
-        printf("thread %d free %d bytes memory\n", id, random);
+        //printf("thread %d free %d bytes memory\n", id, random);
     } 
     printf("thread %d finished\n");
 
