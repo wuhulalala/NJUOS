@@ -49,7 +49,11 @@ uintptr_t *slabs_malloc(size_t n) {
         assert(((uintptr_t)slabs_i - (uintptr_t)slabs) == sizeof(Chunk) * slabs_size * cpu);
         if (cpu == cpu_current()) {spin_lock(&slabs_i[idx].lk);}
         else {
+            #ifndef TEST
             if (try_lock(&slabs_i[idx].lk) == LOCKED) {
+            #else
+            if ()
+            #endif
                 goto Go_to_next_cpu;
             }
         }

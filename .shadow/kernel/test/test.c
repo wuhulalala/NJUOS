@@ -112,7 +112,7 @@ void do_buddy_test_3() {
 }
 
 void do_slab_test_0() {
-    
+    pmm -> alloc(128);
 }
 
 void do_slab_test_1() {

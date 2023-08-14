@@ -30,6 +30,8 @@ static void *kalloc(size_t size) {
   uintptr_t *pointer = NULL;
   if (size >= PGSIZE) {
     pointer = buddys_malloc(size);
+  } else {
+    pointer = slabs_malloc(size);
   }
   //assert(pointer);
   return (void*)pointer;
