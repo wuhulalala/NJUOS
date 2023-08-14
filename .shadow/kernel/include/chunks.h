@@ -29,7 +29,7 @@ typedef struct Chunk {
     struct Chunk *prev;
     struct Chunk *next; 
     spinlock_t lk; 
-    size_t cpu;
+    //size_t cpu;
 }Chunk;
 
 uintptr_t *chunks;

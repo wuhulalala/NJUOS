@@ -67,7 +67,7 @@ uintptr_t *slabs_malloc(size_t n) {
             assert(CHUNKS_GET_IDX_ADD(rc) == idx);
 
             list_remove(rc);
-            rc -> cpu = cpu;
+            //rc -> cpu = cpu;
             spin_unlock(&slabs_i[idx].lk);
             break;
         } else {
@@ -103,7 +103,7 @@ Go_to_next_cpu:
             assert(CHUNKS_GET_FLAG_ADD(t) == CHUNKS_PAGE_SLAB);
             spin_lock(&slabs_i[idx].lk);
             list_insert((Chunk*)t);
-            t -> cpu = cpu; 
+            //t -> cpu = cpu; 
             spin_unlock(&slabs_i[idx].lk);
 
         }
