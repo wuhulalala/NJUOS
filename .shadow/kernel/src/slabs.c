@@ -118,5 +118,5 @@ void slabs_free(uintptr_t * pointer) {
     assert(slabs_i);
     spin_lock(&slabs_i[idx].lk);
     list_insert((Chunk*)pointer);
-    spin_unlock(&slabs_i[idx].lk)
+    spin_unlock(&slabs_i[idx].lk);
 }
