@@ -33,8 +33,8 @@ void slabs_init() {
         }
     }
 
-    //printf("slabs init finished\n");
-    //printf("the chunk size is %d, the slabs range is from %p to %p\n", sizeof(Chunk), slabs, slabs_end);
+    printf("slabs init finished\n");
+    printf("the chunk size is %d, the slabs range is from %p to %p\n", sizeof(Chunk), slabs, slabs_end);
 
 }
 
