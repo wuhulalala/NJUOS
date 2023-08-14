@@ -154,13 +154,13 @@ void do_slab_test_1() {
     srand(time(NULL));
     for (int i = 0; i < 10000000; i++) {
         int random = rand() % (3 * PGSIZE - MINSIZE) + MINSIZE;
-        printf("malloc %d bytes memory\n", random);
+        //printf("malloc %d bytes memory\n", random);
         char *mem = pmm->alloc(random); 
         if (!mem) {
             printf("the random_mem is %d\n", random);
         }
         pmm->free(mem); 
-        printf("free %d bytes memory\n", random);
+        //printf("free %d bytes memory\n", random);
         //printf("finished %d round\n", i + 1);
     } 
     printf("mix test pass\n");
