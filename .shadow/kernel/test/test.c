@@ -5,6 +5,7 @@
 #define PGSIZE 4096
 #define MINSIZE 64
 #define NTHREAD 4
+#define MAXSIZE (16 << 20)
 static void entry1(int id) { 
     srand(time(NULL));
     for (int i = 0; i < 1000000; i++) {
@@ -43,6 +44,7 @@ static void goodbye() {
 int main(int argc, char *argv[]) {
     if (argc < 2) exit(1);
     pmm->init();
+    printf("test 3 finished\n");
     #ifdef BUDDY
     switch(atoi(argv[1])) {
         case 0: do_buddy_test_0();
@@ -150,7 +152,19 @@ void do_slab_test_0() {
 }
 
 void do_slab_test_1() {
-    
+    srand(time(NULL));
+    for (int i = 0; i < 1000000; i++) {
+        int random = rand() % (MAXSIZE - MINSIZE) + MINSIZE;
+        //printf("malloc %d bytes memory\n", random);
+        char *mem = pmm->alloc(random); 
+        if (!mem) {
+            printf("the random_mem is %d\n", random);
+        }
+        pmm->free(mem); 
+        //printf("free %d bytes memory\n", random);
+        //printf("finished %d round\n", i + 1);
+    } 
+    printf("mix test pass\n");
 }
 
 void do_slab_test_2() {
