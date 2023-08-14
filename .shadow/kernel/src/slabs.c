@@ -42,7 +42,6 @@ uintptr_t *slabs_malloc(size_t n) {
     size_t idx = log_n(n);
     size_t actual_size = mem_request2_size(n);
     assert(actual_size >= MINSIZE && actual_size < PGSIZE);
-    int current_cpu = 0;
     int cpu = cpu_current();
     int default_cpu = cpu;
     Chunk *rc = NULL, *slabs_i = NULL;
@@ -80,7 +79,7 @@ Go_to_next_cpu:
     } while (cpu != default_cpu);
 
     if (rc == NULL) {
-        rc = (uintptr_t *) buddys_malloc(PGSIZE);
+        rc = (Chunk *) buddys_malloc(PGSIZE);
         assert(CHUNKS_GET_FLAG_ADD(rc) == CHUNKS_PAGE_BUDDY);
         assert(CHUNKS_GET_STATUS_ADD(rc) == CHUNKS_PAGE_INUSE);
 
@@ -94,7 +93,7 @@ Go_to_next_cpu:
         assert(CHUNKS_GET_IDX_ADD(rc) == idx);
         assert(CHUNKS_GET_FLAG_ADD(rc) == CHUNKS_PAGE_SLAB);
 
-        for (Chunk *t = (uintptr_t)((uintptr_t)rc + (uintptr_t)(1 << idx)); (uintptr_t)t < (uintptr_t)rc + (uintptr_t)PGSIZE; t = (Chunk *)((uintptr_t)t + ((uintptr_t)1 << idx))) {
+        for (Chunk *t = (Chunk *)((uintptr_t)rc + (uintptr_t)(1 << idx)); (uintptr_t)t < (uintptr_t)rc + (uintptr_t)PGSIZE; t = (Chunk *)((uintptr_t)t + ((uintptr_t)1 << idx))) {
             assert((uintptr_t)t + (uintptr_t)(1 << idx) <= (uintptr_t)rc + PGSIZE);
             //CHUNKS_SET_FLAG_ADD(t, CHUNKS_PAGE_SLAB);
             //printf("the round is in the %p\n", ((uintptr_t)ROUNDUP(t, PGSIZE)));

@@ -110,7 +110,7 @@ uintptr_t *buddys_malloc(size_t n) {
     assert(actual_size);
     int idx = exponent - 12;
     int baseline = idx;
-    int debug = idx;
+    //int debug = idx;
 
     assert(idx >= 0);
     spin_lock(&lk);
@@ -180,7 +180,7 @@ void buddys_free(uintptr_t *pointer) {
     assert(CHUNKS_GET_STATUS_ADD(chunk) == CHUNKS_PAGE_UNUSED);
 
     int idx = CHUNKS_GET_IDX_ADD(chunk);
-    int debug = idx;
+    //int debug = idx;
     assert(idx >= 0 && idx < buddys_size);
 
     size_t size = (size_t)((intptr_t)1 << idx) * PGSIZE;
