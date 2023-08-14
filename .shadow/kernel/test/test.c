@@ -152,10 +152,12 @@ void do_slab_test_0() {
 
 void do_slab_test_1() {
     srand(time(NULL));
+    char *mem = pmm->alloc(random); 
+    pmm->free(mem); 
     for (int i = 0; i < 10000000; i++) {
         int random = rand() % (PGSIZE);
         //printf("malloc %d bytes memory\n", random);
-        char *mem = pmm->alloc(random); 
+        mem = pmm->alloc(random); 
         if (!mem) {
             printf("the random_mem is %d\n", random);
         }
