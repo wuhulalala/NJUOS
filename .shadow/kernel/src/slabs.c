@@ -97,7 +97,7 @@ Go_to_next_cpu:
         for (Chunk *t = (uintptr_t)((uintptr_t)rc + (uintptr_t)(1 << idx)); (uintptr_t)t < (uintptr_t)rc + (uintptr_t)PGSIZE; t = (Chunk *)((uintptr_t)t + ((uintptr_t)1 << idx))) {
             assert((uintptr_t)t + (uintptr_t)(1 << idx) <= (uintptr_t)rc + PGSIZE);
             CHUNKS_SET_FLAG_ADD(t, CHUNKS_PAGE_SLAB);
-            printf("the round is in the %p\n", ((uintptr_t)ROUNDUP(rc, PGSIZE)));
+            printf("the round is in the %p\n", ((uintptr_t)ROUNDUP(t, PGSIZE)));
             printf("the address is in the %d page\n", ((uintptr_t)ROUNDUP(t, PGSIZE) - (uintptr_t)chunks_base) / PGSIZE);
             printf("the address is in the %p\n", (void*)t);
             assert(CHUNKS_GET_FLAG_ADD(t) == CHUNKS_PAGE_SLAB);
