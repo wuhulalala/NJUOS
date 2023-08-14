@@ -29,6 +29,7 @@ void slabs_free(uintptr_t * pointer);
 static void *kalloc(size_t size) {
   uintptr_t *pointer = NULL;
   size_t actual_size = mem_request2_size(size);
+  if (actual_size <= MINSIZE) actual_size = MINSIZE;
   if (actual_size >= PGSIZE) {
     pointer = buddys_malloc(size);
     assert(pointer);
