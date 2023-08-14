@@ -71,7 +71,7 @@ static void pmm_init() {
   char *ptr  = malloc(HEAP_SIZE);
   heap.start = ptr;
   heap.end = ptr + HEAP_SIZE;
-  printf("Got %d MiB heap: [%p, %p)\n", HEAP_SIZE >> 20, heap.start, heap.end);
+  //printf("Got %d MiB heap: [%p, %p)\n", HEAP_SIZE >> 20, heap.start, heap.end);
   chunks = (uintptr_t*)heap.start;
   assert(chunks);
   chunks_size = (((uintptr_t)heap.end - (uintptr_t)heap.start) + PGSIZE - 1) / PGSIZE;
