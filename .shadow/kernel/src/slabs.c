@@ -67,6 +67,7 @@ uintptr_t *slabs_malloc(size_t n) {
             assert(CHUNKS_GET_IDX_ADD(rc) == idx);
 
             list_remove(rc);
+            rc -> cpu = cpu;
             spin_unlock(&slabs_i[idx].lk);
             break;
         } else {
@@ -90,7 +91,8 @@ Go_to_next_cpu:
         assert(CHUNKS_GET_IDX_ADD(rc) == idx);
         assert(CHUNKS_GET_FLAG_ADD(rc) == CHUNKS_PAGE_SLAB);
 
-        for (Chunk *t = rc; (uintptr_t)t < (uintptr_t)rc + (uintptr_t)PGSIZE; t = (Chunk *)((uintptr_t)t + ((uintptr_t)1 << idx))) {
+        for (Chunk *t = (uintptr_t)((uintptr_t)rc + (uintptr_t)(1 << idx)); (uintptr_t)t < (uintptr_t)rc + (uintptr_t)PGSIZE; t = (Chunk *)((uintptr_t)t + ((uintptr_t)1 << idx))) {
+            assert((uintptr_t)t + (uintptr_t)(1 << idx) <= (uintptr_t)rc + PGSIZE);
             spin_lock(&slabs_i[idx].lk);
             list_insert((Chunk*)t);
             t -> cpu = cpu; 
@@ -104,5 +106,17 @@ Go_to_next_cpu:
 }
 
 void slabs_free(uintptr_t * pointer) {
+    assert(pointer);
+    Chunk *chunk = (Chunk *)pointer;
+    assert(chunk);
 
+    assert(CHUNKS_GET_FLAG_ADD(chunk) == CHUNKS_PAGE_SLAB);
+    assert(CHUNKS_GET_STATUS_ADD(chunk) == CHUNKS_PAGE_INUSE);
+    int idx = CHUNKS_GET_IDX_ADD(chunk);
+    assert(idx >= 0);
+    Chunk *slabs_i = (Chunk*)((uintptr_t)slabs + (uintptr_t)(sizeof(Chunk) * slabs_size * cpu_current()));
+    assert(slabs_i);
+    spin_lock(&slabs_i[idx].lk);
+    list_insert((Chunk*)pointer);
+    spin_unlock(&slabs_i[idx].lk)
 }

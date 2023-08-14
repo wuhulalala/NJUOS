@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #define PGSIZE 4096
+#define MINSIZE 64
 #define NTHREAD 4
 static void entry1(int id) { 
     srand(time(NULL));
@@ -123,7 +124,22 @@ void do_buddy_test_3() {
 }
 
 void do_slab_test_0() {
-    pmm -> alloc(128);
+    srand(time(NULL));
+    char *mem = pmm -> alloc(128);
+    pmm -> free(mem); 
+    printf("End\n");
+    //for (int i = 0; i < 1000000; i++) {
+        //int random = rand() % (PGSIZE - MINSIZE) + MINSIZE;
+        //printf("malloc %d bytes memory\n", random);
+        //char *mem = pmm->alloc(random); 
+        //if (!mem) {
+            //printf("the random_mem is %d\n", random);
+        //}
+        //pmm->free(mem); 
+        ////printf("free %d page memory\n", random_mem / 4096);
+        //printf("finished %d round\n", i + 1);
+
+    //}
 }
 
 void do_slab_test_1() {
