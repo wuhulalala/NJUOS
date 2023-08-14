@@ -42,12 +42,15 @@ uintptr_t *slabs_malloc(size_t n) {
     size_t idx = log_n(n);
     size_t actual_size = mem_request2_size(n);
     assert(actual_size >= MINSIZE && actual_size < PGSIZE);
+    int current_cpu = 0;
     int cpu = cpu_current();
+    int default_cpu = cpu;
     Chunk *rc = NULL, *slabs_i = NULL;
     do {
-        Chunk *slabs_i = (Chunk*)((uintptr_t)slabs + (uintptr_t)(sizeof(Chunk) * slabs_size * cpu_current()));
-        assert(((uintptr_t)slabs_i - (uintptr_t)slabs) == sizeof(Chunk) * slabs_size * cpu);
-        if (cpu == cpu_current()) {spin_lock(&slabs_i[idx].lk);}
+        current_cpu = cpu_current();
+        Chunk *slabs_i = (Chunk*)((uintptr_t)slabs + (uintptr_t)(sizeof(Chunk) * slabs_size * current_cpu));
+        assert(((uintptr_t)slabs_i - (uintptr_t)slabs) == sizeof(Chunk) * slabs_size * current_cpu);
+        if (cpu == current_cpu) {spin_lock(&slabs_i[idx].lk);}
         else {
             if (try_lock(&slabs_i[idx].lk) == LOCKED) {
                 goto Go_to_next_cpu;
@@ -74,7 +77,7 @@ uintptr_t *slabs_malloc(size_t n) {
 Go_to_next_cpu:
     cpu = (cpu + 1) % cpu_count();
 
-    } while (cpu != cpu_current());
+    } while (cpu != default_cpu);
 
     if (rc == NULL) {
         rc = (uintptr_t *) buddys_malloc(PGSIZE);
