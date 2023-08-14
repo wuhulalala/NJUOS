@@ -87,6 +87,7 @@ Go_to_next_cpu:
         CHUNKS_SET_IDX_ADD(rc, idx);
         CHUNKS_SET_FLAG_ADD(rc, CHUNKS_PAGE_SLAB);
 
+        printf("the address is in the %p\n", (void*)rc);
         printf("the address is in the %d page\n", ((uintptr_t)ROUNDUP(rc, PGSIZE) - (uintptr_t)heap.start) / PGSIZE);
 
         assert(CHUNKS_GET_IDX_ADD(rc) == idx);
