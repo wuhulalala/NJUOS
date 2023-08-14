@@ -44,7 +44,8 @@ void buddys_init() {
 void list_insert(Chunk* chunk) {
     Chunk *head = NULL;
     assert(chunk);
-    switch (CHUNKS_GET_FLAG_ADD(chunk)) {
+    int flag = CHUNKS_GET_FLAG_ADD(chunk);
+    switch (flag) {
     case CHUNKS_PAGE_BUDDY :
         head = &buddys[CHUNKS_GET_IDX_ADD(chunk)];
         assert(head);
