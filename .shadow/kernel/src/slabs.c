@@ -82,7 +82,7 @@ Go_to_next_cpu:
     if (rc == NULL) {
         rc = (uintptr_t *) buddys_malloc(PGSIZE);
         assert(CHUNKS_GET_FLAG_ADD(rc) == CHUNKS_PAGE_BUDDY);
-        assert(CHUNKS_GET_STATUS_ADD(rc) == CHUNKS_PAGE_UNUSED);
+        assert(CHUNKS_GET_STATUS_ADD(rc) == CHUNKS_PAGE_INUSE);
 
         CHUNKS_SET_IDX_ADD(rc, idx);
         CHUNKS_SET_FLAG_ADD(rc, CHUNKS_PAGE_SLAB);
