@@ -59,7 +59,7 @@ uintptr_t *slabs_malloc(size_t n) {
             rc = slabs_i[idx].next;
             assert(rc);
             assert(CHUNKS_GET_FLAG_ADD(rc) == CHUNKS_PAGE_SLAB);
-            assert(CHUNKS_GET_STATUS_ADD(rc) == CHUNKS_PAGE_UNUSED);
+            assert(CHUNKS_GET_STATUS_ADD(rc) == CHUNKS_PAGE_INUSE);
 
             CHUNKS_SET_IDX_ADD(rc, idx);
 
