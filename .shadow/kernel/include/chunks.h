@@ -45,6 +45,7 @@ size_t slabs_size;
 
 
 spinlock_t lk;
+spinlock_t slab_lk;
 // some helpful marcos
 #define CHUNKS_STATUS_SIZE (1)
 #define CHUNKS_FLAG_SIZE (1)

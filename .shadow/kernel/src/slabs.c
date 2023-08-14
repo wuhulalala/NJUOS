@@ -20,6 +20,11 @@ void slabs_init() {
     assert(slabs_size == 12);
     Chunk *slabs_end = (Chunk*)((uintptr_t)slabs + (uintptr_t)(sizeof(Chunk) * slabs_size * cpu_count()));
     assert((uintptr_t)slabs_end <= (uintptr_t)chunks_base);
+    #ifdef TEST
+    pthread_mutex_init(&slab_lk, NULL);
+    #else
+    slab_lk = SPIN_INIT();
+    #endif
     for (int i = 0; i < cpu_count(); i++) {
         Chunk *slabs_i = (Chunk *) ((uintptr_t)slabs + i * (uintptr_t)(sizeof(Chunk) * slabs_size));
         for (int j = 0; j < slabs_size; j++) {
