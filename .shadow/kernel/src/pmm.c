@@ -31,10 +31,10 @@ static void *kalloc(size_t size) {
   size_t actual_size = mem_request2_size(size);
   if (actual_size <= MINSIZE) actual_size = MINSIZE;
   if (actual_size >= PGSIZE) {
-    pointer = buddys_malloc(size);
+    pointer = buddys_malloc(actual_size);
     assert(pointer);
   } else {
-    pointer = slabs_malloc(size);
+    pointer = slabs_malloc(actual_size);
     assert(pointer);
   }
   //assert(pointer);
