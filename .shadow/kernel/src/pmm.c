@@ -62,6 +62,8 @@ static void pmm_init() {
   assert(chunks);
   chunks_size = (((uintptr_t)heap.end - (uintptr_t)heap.start) + PGSIZE - 1) / PGSIZE;
   printf("the chunks is [%p, %p), the chunks size is %d\n", (uintptr_t)chunks, (uintptr_t)(chunks) + (uintptr_t)(chunks_size) * PGSIZE, chunks_size); 
+  printf("the address is in the %d page\n", ((uintptr_t)ROUNDUP(heap.start + 0x7ffff2000000, PGSIZE) - (uintptr_t)heap.start) / PGSIZE);
+  printf("the address is in the %d page\n", ((uintptr_t)ROUNDUP(heap.start + 0x7ffff2000800, PGSIZE) - (uintptr_t)heap.start) / PGSIZE);
   buddys_init();
   slabs_init();
 }
@@ -75,8 +77,8 @@ static void pmm_init() {
   chunks = (uintptr_t*)heap.start;
   assert(chunks);
   chunks_size = (((uintptr_t)heap.end - (uintptr_t)heap.start) + PGSIZE - 1) / PGSIZE;
-  //printf("the address is in the %d page\n", ((uintptr_t)ROUNDUP(heap.start + PGSIZE, PGSIZE) - (uintptr_t)heap.start) / PGSIZE);
-  //chunks[0] = 0xffffffffffffffff;
+  printf("the address is in the %d page\n", ((uintptr_t)ROUNDUP(heap.start + PGSIZE, PGSIZE) - (uintptr_t)heap.start) / PGSIZE);
+  chunks[0] = 0xffffffffffffffff;
 
   //printf("the index is %p, the flag is %p, the status is %p\n", CHUNKS_GETIDX_ADD(chunks + 10), CHUNKS_GETFLAG_ADD(chunks + 10), CHUNKS_GETSTATUS_ADD(chunks + 10));
   //chunks[0] = CHUNKS_SET_IDX(chunks[0], 100);
