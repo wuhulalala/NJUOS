@@ -162,7 +162,7 @@ uintptr_t *buddys_malloc(size_t n) {
 
     } 
     spin_unlock(&lk);
-    printf("malloc %d page successful\n", 1 << debug);
+    //printf("malloc %d page successful\n", 1 << debug);
     assert(pointer);
     return (uintptr_t*)pointer;
 }
@@ -231,6 +231,6 @@ void buddys_free(uintptr_t *pointer) {
     spin_unlock(&buddys[idx].lk);
 
     spin_unlock(&lk);
-    printf("free %d page finished\n", 1 << debug);
+    //printf("free %d page finished\n", 1 << debug);
 
 }
