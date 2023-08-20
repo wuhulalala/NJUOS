@@ -12,24 +12,77 @@ include $(AM_HOME)/Makefile
 include ../Makefile.lab
 image: git
 
-test: git
+compileBuddy: git
 	@gcc $(shell find src/ -name "pmm.c")  \
 	     $(shell find src/ -name "chunks.c")  \
 	     $(shell find src/ -name "buddys.c")  \
 	     $(shell find src/ -name "spinlock.c")  \
+	     $(shell find src/ -name "slabs.c")  \
 	     $(shell find test/ -name "*.c") \
+	     -D BUDDY \
 	     -I ./include \
       	     -w -Iframework -Itest -DTEST -lpthread \
+	     -fsanitize=address \
 	     -ggdb \
              -o build/test
-	@build/test 2> /dev/null
+
+compileSlab: git
+	@gcc $(shell find src/ -name "pmm.c")  \
+	     $(shell find src/ -name "chunks.c")  \
+	     $(shell find src/ -name "buddys.c")  \
+	     $(shell find src/ -name "spinlock.c")  \
+	     $(shell find src/ -name "slabs.c")  \
+	     $(shell find test/ -name "*.c") \
+	     -D SLAB \
+	     -I ./include \
+      	     -w -Iframework -Itest -DTEST -lpthread \
+	     -fsanitize=address \
+	     -ggdb \
+             -o build/test
+
 debug:
 	qemu-system-x86_64 -nographic -serial mon:stdio -machine accel=tcg -smp 4 -drive format=raw,file=/home/liscopye/NJUOS/os-workbench/kernel/build/kernel-x86_64-qemu &
-	gdb -x gdb.init
-testlock:
+	cgdb -x gdb.init
+testLock:
 	qemu-system-x86_64  -nographic -serial mon:stdio -machine accel=tcg -smp 4  -drive format=raw,file=/home/liscopye/NJUOS/os-workbench/kernel/build/kernel-x86_64-qemu 
 
-debugtest:
+debugTest:
 	gdb -x init.gdb
 
+
+buddyTest0:
+	@build/test 0
+
+buddyTest1:
+	@build/test 1
+
+buddyTest2:
+	@build/test 2
+
+buddyTest3:
+	@build/test 3
+
+testAllbuddy:
+	@build/test 0
+	@build/test 1
+	@build/test 2
+	@build/test 3
+
+slabTest0:
+	@build/test 0
+
+slabTest1:
+	@build/test 1
+
+slabTest2:
+	@build/test 2
+
+slabTest3:
+	@build/test 3
+
+testAllSlab:
+	@build/test 0
+	@build/test 1
+	@build/test 2
+	@build/test 3
 

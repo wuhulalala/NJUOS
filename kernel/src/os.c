@@ -13,7 +13,7 @@ static void os_run() {
   //} 
   //printf("sum is %d\n", sum);
   printf("the cpu count is %d\n", cpu_count());
-  pmm -> alloc(5 * 4096);
+  //pmm -> alloc(5 * 4096);
   while(1);
 }
 
