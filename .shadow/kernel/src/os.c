@@ -19,7 +19,6 @@ static void os_run() {
 }
 
 static Context * os_trap(Event ev, Context *context) {
-  while (1);
   return NULL;
 }
 static void os_on_irq(int seq, int event, handler_t handler) {
