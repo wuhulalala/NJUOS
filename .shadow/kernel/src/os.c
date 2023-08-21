@@ -4,7 +4,7 @@ static void os_init() {
   pmm -> init();
   //kmt -> init();
 }
-
+extern int i;
 static void os_run() {
   iset(true);
   //for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
@@ -15,7 +15,6 @@ static void os_run() {
 
 static Context * os_trap(Event ev, Context *context) {
 
-  int i = 0;
   i++;
   printf("the i is %d \n", i);
   return context;
