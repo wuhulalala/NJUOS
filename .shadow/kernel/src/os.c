@@ -1,7 +1,8 @@
 #include <common.h>
 extern int sum;
 static void os_init() {
-  pmm->init();
+  pmm -> init();
+  kmt -> init();
 }
 
 static void os_run() {

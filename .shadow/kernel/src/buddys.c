@@ -15,14 +15,14 @@ void buddys_init() {
         pthread_mutex_init(&buddys[i].lk, NULL);
 
         #else
-        buddys[i].lk = SPIN_INIT();
+        buddys[i].lk.lock = SPIN_INIT();
         #endif
         
     }
     #ifdef TEST
     pthread_mutex_init(&lk, NULL);
     #else
-    lk = SPIN_INIT();
+    lk.lock = SPIN_INIT();
     #endif
     for (uintptr_t iter = (uintptr_t)chunks_base; iter + MAXSIZE < (uintptr_t)heap.end; iter += MAXSIZE) {
         CHUNKS_SET_IDX_ADD(iter, buddys_size - 1);

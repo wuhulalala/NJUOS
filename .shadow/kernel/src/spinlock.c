@@ -3,18 +3,18 @@
 #include <klib-macros.h>
 void spin_lock(spinlock_t *lk) {
     while (1) {
-        uintptr_t value = atomic_xchg(lk, LOCKED);
+        uintptr_t value = atomic_xchg(&(lk -> lock), LOCKED);
         if (value == UNLOCKED) {
             break;
         }
     }
 }
 void spin_unlock(spinlock_t *lk) {
-    assert(atomic_xchg(lk, UNLOCKED) == LOCKED);
+    assert(atomic_xchg(&(lk -> lock), UNLOCKED) == LOCKED);
 }
 
 uintptr_t try_lock(spinlock_t *lk) {
-    return atomic_xchg(lk, LOCKED);
+    return atomic_xchg(&(lk -> lock), LOCKED);
 }
 #else
 void spin_lock(spinlock_t *lk)   { pthread_mutex_lock(lk); }
