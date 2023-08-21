@@ -4,16 +4,12 @@ static void os_init() {
   pmm -> init();
   //kmt -> init();
 }
-extern int i;
 static void os_run() {
   iset(true);
   //for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
     //putch(*s == '*' ? '0' + cpu_current() : *s);
   //}
-  for (int k = 0; k < 2000000; k++) {
-    printf("i is %d\n", i);
-    i++;
-  }
+  while(1);
 }
 
 static Context * os_trap(Event ev, Context *context) {
