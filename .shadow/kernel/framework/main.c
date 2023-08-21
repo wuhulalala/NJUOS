@@ -3,7 +3,7 @@
 
 int sum = 0;
 int main() {
-  ioe_init();
+  //ioe_init();
   //cte_init(os->trap);
   os->init();
   mpe_init(os->run);
