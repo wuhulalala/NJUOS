@@ -10,13 +10,14 @@ static void os_run() {
   //for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
     //putch(*s == '*' ? '0' + cpu_current() : *s);
   //}
-  while(1);
+  for (int k = 0; k < 2000000; k++) {
+    printf("i is %d\n", i);
+    i++;
+  }
 }
 
 static Context * os_trap(Event ev, Context *context) {
 
-  i++;
-  printf("the i is %d \n", i);
   return context;
 }
 static void os_on_irq(int seq, int event, handler_t handler) {
