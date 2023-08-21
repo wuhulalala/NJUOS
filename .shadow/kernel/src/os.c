@@ -6,12 +6,10 @@ static void os_init() {
 }
 
 static void os_run() {
-  while (1) {
   for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
     putch(*s == '*' ? '0' + cpu_current() : *s);
   }
-  yield();
-  }
+  while(1);
 }
 
 static Context * os_trap(Event ev, Context *context) {
