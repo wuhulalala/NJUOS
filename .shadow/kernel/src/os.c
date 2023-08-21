@@ -15,7 +15,9 @@ static void os_run() {
 
 static Context * os_trap(Event ev, Context *context) {
 
-  printf("cpu %d : Hello World\n", cpu_current());
+  int i = 0;
+  i++;
+  printf("the i is %d \n", i);
   return context;
 }
 static void os_on_irq(int seq, int event, handler_t handler) {
