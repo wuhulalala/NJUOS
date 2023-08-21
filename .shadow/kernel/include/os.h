@@ -1,3 +1,4 @@
+#ifndef TEST
 #include <common.h>
 
 struct task {
@@ -12,3 +13,4 @@ struct spinlock {
 struct semaphore {
   // TODO
 };
+#endif
