@@ -6,6 +6,7 @@ static void os_init() {
 }
 
 static void os_run() {
+  iset(true);
   for (const char *s = "Hello World from CPU #*\n"; *s; s++) {
     putch(*s == '*' ? '0' + cpu_current() : *s);
   }
