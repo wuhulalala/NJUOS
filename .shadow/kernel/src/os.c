@@ -19,8 +19,9 @@ static void os_run() {
 }
 
 static Context * os_trap(Event ev, Context *context) {
+
   printf("Hello World\n");
-  return NULL;
+  return context;
 }
 static void os_on_irq(int seq, int event, handler_t handler) {
 
