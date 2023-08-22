@@ -24,7 +24,7 @@ Area heap;
 #endif
 #define PGSIZE 4096
 #define MAXSIZE (16 << 20)
-#define MINSIZE 56
+#define MINSIZE sizeof(Chunk)
 
 typedef struct Chunk {
     struct Chunk *prev;
