@@ -1,5 +1,9 @@
 #include <os.h>
 
+spinlock_t irq_lk;
+static void kmt_init() {
+    kmt -> spin_init(&irq_lk, "irq queue lock");
+}
 static void kmt_spin_init(spinlock_t *lk, const char *name) {
     strcpy(lk -> name, name);
     lk -> lock = KMT_UNLOCK;
@@ -22,7 +26,7 @@ static void kmt_spin_unlock(spinlock_t *lk) {
 }
 
 MODULE_DEF(kmt) = {
-    .init = kmt_spin_init,
+    .init = kmt_init,
     .spin_init = kmt_spin_init,
     .spin_lock = kmt_spin_lock,
     .spin_unlock = kmt_spin_unlock,
