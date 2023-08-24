@@ -33,40 +33,7 @@ void idle_entry(void *arg) {
 }
 
 static void check_static_fence(task_t *task);
-static void kmt_init() {
-    kmt -> spin_init(&irq_lk, "irq queue lock");
-    kmt -> spin_init(&task_lk, "tasks lock");
-    current_task = (task_t **) pmm -> alloc(sizeof(task_t *) * cpu_count());
-    schedule_context = (Context **) pmm -> alloc(sizeof(Context *) * cpu_count());
-    panic_on(!current_task, "there is no space");
-    panic_on(!schedule_context, "there is no space");
-    for (int cpu = 0; cpu < cpu_count(); cpu++) {
-        task_t *task = (task_t *)pmm -> alloc(sizeof(task_t));
-        panic_on(!task, "there is no space");
-        Area stack = (Area) {&task -> stack, &task -> stack + KMT_STACK_SIZE};
-        task -> context = kcontext(stack, idle_entry, NULL);
-        task -> round = KMT_INIT_ROUND;
-        task -> status = WAIT_TO_LOAD;
-        task -> next = task -> prev = task;
-        for (int i = 0; i < KMT_FENCE_SIZE; i++) {
-            task -> fence1[i] = task -> fence2[i] = KMT_FENCE;
-        }
 
-        current_task[cpu] = task;
-        check_static_fence(task);
-    }
-
-    for (int cpu = 1; cpu < cpu_count(); cpu++) {
-        kmt -> spin_lock(&task_lk);
-        list_insert(current_task[0], current_task[cpu]);
-        kmt -> spin_unlock(&task_lk);
-    }
-    printf("kmt init finished");
-
-
-
-
-}
 static void kmt_spin_init(spinlock_t *lk, const char *name) {
     strcpy(lk -> name, name);
     lk -> lock = KMT_UNLOCK;
@@ -269,6 +236,48 @@ static int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), 
     list_insert(current_task[0], task);
     kmt -> spin_unlock(&task_lk);
     return 0;
+}
+
+
+static void kmt_init() {
+    kmt -> spin_init(&irq_lk, "irq queue lock");
+    kmt -> spin_init(&task_lk, "tasks lock");
+    current_task = (task_t **) pmm -> alloc(sizeof(task_t *) * cpu_count());
+    schedule_context = (Context **) pmm -> alloc(sizeof(Context *) * cpu_count());
+    panic_on(!current_task, "there is no space");
+    panic_on(!schedule_context, "there is no space");
+    for (int cpu = 0; cpu < cpu_count(); cpu++) {
+        task_t *task = (task_t *)pmm -> alloc(sizeof(task_t));
+        panic_on(!task, "there is no space");
+        Area stack = (Area) {&task -> stack, &task -> stack + KMT_STACK_SIZE};
+        task -> context = kcontext(stack, idle_entry, NULL);
+        task -> round = KMT_INIT_ROUND;
+        task -> status = WAIT_TO_LOAD;
+        task -> next = task -> prev = task;
+        for (int i = 0; i < KMT_FENCE_SIZE; i++) {
+            task -> fence1[i] = task -> fence2[i] = KMT_FENCE;
+        }
+
+        current_task[cpu] = task;
+        check_static_fence(task);
+    }
+
+    for (int cpu = 1; cpu < cpu_count(); cpu++) {
+        kmt -> spin_lock(&task_lk);
+        list_insert(current_task[0], current_task[cpu]);
+        kmt -> spin_unlock(&task_lk);
+    }
+    os -> on_irq(INT32_MIN, EVENT_NULL, kmt_save_context);
+    os -> on_irq(INT32_MAX, EVENT_NULL, kmt_load_context);
+    os -> on_irq(TIME_SEQ, EVENT_IRQ_TIMER, irq_time_handler);
+    os -> on_irq(YIELD_SEQ, EVENT_YIELD, irq_yield_handler);
+
+
+    printf("kmt init finished");
+
+
+
+
 }
 MODULE_DEF(kmt) = {
     .init = kmt_init,

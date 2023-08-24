@@ -12,6 +12,8 @@
 #define KMT_STACK_SIZE (8192)
 #define KMT_INIT_ROUND 10
 
+#define TIME_SEQ 0
+#define YIELD_SEQ 1
 
 struct task {
   char name[NAME_LEN];
