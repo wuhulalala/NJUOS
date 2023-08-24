@@ -10,7 +10,7 @@
 #define KMT_FENCE (0x17377199)
 #define KMT_FENCE_SIZE 2
 #define KMT_STACK_SIZE (8192)
-#define KMT_INIT_ROUND 10
+#define KMT_INIT_ROUND 1
 
 #define TIME_SEQ 0
 #define YIELD_SEQ 1
