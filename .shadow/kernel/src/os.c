@@ -1,6 +1,7 @@
 #include <common.h>
 #include <os.h>
 extern spinlock_t irq_lk;
+void kmt_schedule();
 static void os_init() {
   pmm -> init();
   kmt -> init();
@@ -14,8 +15,7 @@ static IRQ irq = {
 };
 
 static void os_run() {
-  iset(true);
-  while(1);
+  kmt_schedule();
 }
 
 static Context * os_trap(Event ev, Context *context) {

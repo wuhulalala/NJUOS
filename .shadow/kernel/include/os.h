@@ -14,7 +14,7 @@
 
 
 struct task {
-  const char *name;
+  char name[NAME_LEN];
   enum {
     READY,
     RUNNING,
@@ -51,3 +51,9 @@ typedef struct irq {
   handler_t handler;
   struct irq *next;
 }IRQ;
+
+task_t **current_task;
+Context **schedule_context;
+task_t *tasks;
+spinlock_t irq_lk;
+spinlock_t task_lk;
