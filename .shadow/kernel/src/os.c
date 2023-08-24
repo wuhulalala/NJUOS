@@ -36,7 +36,6 @@ static Context * os_trap(Event ev, Context *context) {
 static void os_on_irq(int seq, int event, handler_t handler) {
   IRQ * node = (IRQ*)pmm -> alloc(sizeof(IRQ));
   assert(node);
-  assert(seq >= 0);
   assert(irq.event == MAGIC_EVENT);
   assert(irq.seq == MAGIC_SEQ);
   assert(irq.handler == MAGIC_HANDLER);
