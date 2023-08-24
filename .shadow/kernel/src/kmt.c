@@ -28,8 +28,9 @@ static void list_insert(task_t *head, task_t *task) {
 
 //}
 void idle_entry(void *arg) {
-    printf("Hello world from cpu %d\n", cpu_current());
-    while(1);
+    while(1) {
+        printf("Hello world from cpu %d\n", cpu_current());
+    };
 }
 
 static void check_static_fence(task_t *task);
