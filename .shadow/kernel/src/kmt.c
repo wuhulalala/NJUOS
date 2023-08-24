@@ -192,6 +192,7 @@ void kmt_schedule() {
     while (1) {
         yield();
 
+        printf("is here!!!\n");
         kmt -> spin_lock(&task_lk);
         task_t *task = current_task[cpu];
         switch (task -> status)
