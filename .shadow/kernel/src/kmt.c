@@ -249,6 +249,9 @@ static void kmt_init() {
     for (int cpu = 0; cpu < cpu_count(); cpu++) {
         task_t *task = (task_t *)pmm -> alloc(sizeof(task_t));
         panic_on(!task, "there is no space");
+        char name[] = "this is the cpu 0";
+        name[16] = name[16] + cpu;
+        strcpy(task -> name, name);
         Area stack = (Area) {&task -> stack, &task -> stack + KMT_STACK_SIZE};
         task -> context = kcontext(stack, idle_entry, NULL);
         task -> round = KMT_INIT_ROUND;
