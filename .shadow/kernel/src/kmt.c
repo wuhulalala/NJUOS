@@ -209,12 +209,16 @@ void kmt_schedule() {
             panic("error status");
         }
 
+        printf("is here!!!\n");
         task_t *p = task -> next;
-        while (p != READY) {p = p -> next;}
+        while (p != READY) {p = p -> next;
+            printf("is ready!!!\n");
+        }
         p -> round = KMT_INIT_ROUND;
         p -> status = WAIT_TO_LOAD;
         check_static_fence(p);
         
+        printf("is here!!!\n");
 
         current_task[cpu] = p;
         kmt -> spin_unlock(&task_lk);
