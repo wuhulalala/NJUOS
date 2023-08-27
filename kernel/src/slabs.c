@@ -23,7 +23,7 @@ void slabs_init() {
     #ifdef TEST
     pthread_mutex_init(&slab_lk, NULL);
     #else
-    slab_lk = SPIN_INIT();
+    slab_lk.lock = SPIN_INIT();
     #endif
     for (int i = 0; i < cpu_count(); i++) {
         Chunk *slabs_i = (Chunk *) ((uintptr_t)slabs + i * (uintptr_t)(sizeof(Chunk) * slabs_size));
@@ -33,13 +33,13 @@ void slabs_init() {
             #ifdef TEST
             pthread_mutex_init(&slabs_i[j].lk, NULL);
             #else
-            slabs_i[j].lk = SPIN_INIT();
+            slabs_i[j].lk.lock = SPIN_INIT();
             #endif
         }
     }
 
-    printf("slabs init finished\n");
-    printf("the chunk size is %d, the slabs range is from %p to %p\n", sizeof(Chunk), slabs, slabs_end);
+    //printf("slabs init finished\n");
+    //printf("the chunk size is %d, the slabs range is from %p to %p\n", sizeof(Chunk), slabs, slabs_end);
 
 }
 

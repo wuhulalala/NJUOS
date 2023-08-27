@@ -1,3 +1,5 @@
+#ifndef HEADER_FILE_SLAB  
+#define HEADER_FILE_SLAB  
 #include <am.h>
 #include "chunks.h"
 #ifdef TEST
@@ -10,8 +12,9 @@
 #define cpu_current() sched_getcpu()
 #endif
 
-#define MINSIZE 56
+#define MINSIZE sizeof(Chunk)
 #define SLABS_CPU(i) sla_b##i
 void slabs_init();
 uintptr_t *slabs_malloc(size_t n);
 void slabs_free(uintptr_t * pointer);
+#endif

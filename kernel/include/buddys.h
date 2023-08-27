@@ -1,5 +1,5 @@
-#ifndef HEADER_FILE_H  
-#define HEADER_FILE_H  
+#ifndef HEADER_FILE_BUDDY  
+#define HEADER_FILE_BUDDY  
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 #include <am.h>
 #include "chunks.h"

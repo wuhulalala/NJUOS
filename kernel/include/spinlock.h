@@ -3,7 +3,7 @@
 #ifndef TEST
 #include <klib.h>
 #include <am.h>
-typedef int spinlock_t;
+#include <os.h>
 #define SPIN_INIT() 0
 #define LOCKED 1
 #define UNLOCKED 0
