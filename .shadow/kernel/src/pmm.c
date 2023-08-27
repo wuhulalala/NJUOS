@@ -7,6 +7,12 @@
 Area heap = {};
 #endif
 // some global variables defined in the chunks.h
+extern uintptr_t *chunks;
+extern size_t chunks_size;
+
+extern uintptr_t *chunks_base;
+extern Chunk *buddys;
+extern size_t buddys_size;
 
 // buddys function
 void buddys_init();
@@ -64,12 +70,6 @@ static void kfree_safe(void *ptr) {
 #ifndef TEST
 // 框架代码中的 pmm_init (在 AbstractMachine 中运行)
 static void pmm_init() {
-  //uintptr_t *chunks = NULL;
-  //size_t chunks_size = 0;
-
-  //uintptr_t *chunks_base = NULL;
-  //Chunk *buddys = NULL;
-  //size_t buddys_size = 0;
   //uintptr_t pmsize = ((uintptr_t)heap.end - (uintptr_t)heap.start);
   //printf("Got %d MiB heap: [%p, %p)\n", pmsize >> 20, heap.start, heap.end);
   chunks = (uintptr_t*)heap.start;
