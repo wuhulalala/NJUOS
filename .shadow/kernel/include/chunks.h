@@ -1,3 +1,5 @@
+#ifndef HEADER_FILE_CHUNK  
+#define HEADER_FILE_CHUNK  
 #include "spinlock.h"
 #ifndef TEST
 #include <klib.h>
@@ -13,9 +15,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdint.h>
-#include <assert.h>
-#include "kernel.h"
+#include <stdint.h> #include <assert.h> #include "kernel.h"
 #define HEAP_SIZE 128 * (1 << 20)
 typedef struct {
   void *start, *end;
@@ -81,3 +81,4 @@ spinlock_t slab_lk;
 
 int log_n(size_t n);
 uintptr_t mem_request2_size(size_t n);
+#endif

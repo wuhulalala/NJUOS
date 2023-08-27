@@ -1,3 +1,5 @@
+#ifndef HEADER_FILE_SLAB  
+#define HEADER_FILE_SLAB  
 #include <am.h>
 #include "chunks.h"
 #ifdef TEST
@@ -15,3 +17,4 @@
 void slabs_init();
 uintptr_t *slabs_malloc(size_t n);
 void slabs_free(uintptr_t * pointer);
+#endif

@@ -1,3 +1,5 @@
+#ifndef HEADER_FILE_OS  
+#define HEADER_FILE_OS  
 #include <common.h>
 
 #define NAME_LEN 128
@@ -59,3 +61,4 @@ Context **schedule_context;
 task_t *tasks;
 spinlock_t irq_lk;
 spinlock_t task_lk;
+#endif
