@@ -7,12 +7,12 @@
 Area heap = {};
 #endif
 // some global variables defined in the chunks.h
-extern uintptr_t *chunks;
-extern size_t chunks_size;
+uintptr_t *chunks = NULL;
+size_t chunks_size = 0;
 
-extern uintptr_t *chunks_base;
-extern Chunk *buddys;
-extern size_t buddys_size;
+uintptr_t *chunks_base = NULL;
+Chunk *buddys = NULL;
+size_t buddys_size = 0;
 
 // buddys function
 void buddys_init();
