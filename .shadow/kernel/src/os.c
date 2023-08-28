@@ -1,31 +1,16 @@
 #include <os.h>
 #include <common.h>
-#include <devices.h>
 extern spinlock_t irq_lk;
 void kmt_schedule();
 
-task_t *task_alloc();
 
 
-static void tty_reader(void *arg) {
-  printf("Hello World\n");
-  device_t *tty = dev->lookup(arg);
-  char cmd[128], resp[128], ps[16];
-  snprintf(ps, 16, "(%s) $ ", arg);
-  while (1) {
-    tty->ops->write(tty, 0, ps, strlen(ps));
-    int nread = tty->ops->read(tty, 0, cmd, sizeof(cmd) - 1);
-    cmd[nread] = '\0';
-    sprintf(resp, "tty reader task: got %d character(s).\n", strlen(cmd));
-    tty->ops->write(tty, 0, resp, strlen(resp));
-  }
-}
+
 
 static void os_init() {
   pmm -> init();
   kmt -> init();
-  kmt->create(task_alloc(), "tty_reader", tty_reader, "tty1");
-  kmt->create(task_alloc(), "tty_reader", tty_reader, "tty2");
+  
 }
 
 static IRQ irq = {

@@ -1,4 +1,6 @@
+#include <common.h>
 #include <os.h>
+#include <devices.h>
 
 static void list_insert(task_t *head, task_t *task) {
     panic_on(atomic_xchg(&(task_lk.lock), KMT_LOCK) == KMT_UNLOCK, "error, the lock is not acquired");
@@ -23,10 +25,18 @@ static void list_insert(task_t *head, task_t *task) {
     //pmm -> free(task);
 
 //}
-void idle_entry(void *arg) {
-    while(1) {
-        printf("Hello world from cpu %d\n", cpu_current());
-    };
+static void idle_entry(void *arg) {
+  printf("Hello World\n");
+  device_t *tty = dev->lookup(arg);
+  char cmd[128], resp[128], ps[16];
+  snprintf(ps, 16, "(%s) $ ", arg);
+  while (1) {
+    tty->ops->write(tty, 0, ps, strlen(ps));
+    int nread = tty->ops->read(tty, 0, cmd, sizeof(cmd) - 1);
+    cmd[nread] = '\0';
+    sprintf(resp, "tty reader task: got %d character(s).\n", strlen(cmd));
+    tty->ops->write(tty, 0, resp, strlen(resp));
+  }
 }
 
 static void check_static_fence(task_t *task);
