@@ -4,14 +4,10 @@ static void list_insert(task_t *head, task_t *task) {
     panic_on(atomic_xchg(&(task_lk.lock), KMT_LOCK) == KMT_UNLOCK, "error, the lock is not acquired");
     assert(head);
     assert(task);
-    task_t *p = NULL;
-    for (p = head; p -> next != head; p = p -> next);
-    assert(p);
-    p -> next -> prev = task;
-    task -> next = p -> next;
-    task -> prev = p;
-    p -> next = task;
-
+    head -> next -> prev = task;
+    task -> next = head -> next;
+    task -> prev = head;
+    head -> next = task;
 
 }
 
@@ -37,9 +33,7 @@ static void check_static_fence(task_t *task);
 
 static void kmt_spin_init(spinlock_t *lk, const char *name) {
     strcpy(lk -> name, name);
-    lk -> lock = KMT_UNLOCK;
-
-}
+    lk -> lock = KMT_UNLOCK; }
 
 static void kmt_spin_lock(spinlock_t *lk) {
     bool interrupt_status = ienabled();
@@ -207,10 +201,9 @@ void kmt_schedule() {
             panic("error status");
         }
 
-        printf("is here!!!\n");
         task_t *p = task -> next;
-        while (p -> status != READY) {p = p -> next;
-            printf("is ready!!!\n");
+        while (p -> status != READY || p == &task_head) {
+            p = p -> next;
         }
         p -> round = KMT_INIT_ROUND;
         p -> status = WAIT_TO_LOAD;
@@ -238,30 +231,48 @@ static int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), 
     }
     check_static_fence(task);
     kmt -> spin_lock(&task_lk);
-    list_insert(current_task[0], task);
+    list_insert(&task_head, task);
     kmt -> spin_unlock(&task_lk);
     return 0;
 }
 
 
+static void initialize_task_list(task_t *head, const char *name) {
+    assert(head);
+    strcpy(head -> name, name);
+    head -> context = NULL;
+    head -> next = head -> prev = head;
+}
+
 static void kmt_init() {
+    // initialize the task_list
+    initialize_task_list(&task_head, "task list head");
+
+    // initialize the idle thread for each cpu    
     kmt -> spin_init(&irq_lk, "irq queue lock");
     kmt -> spin_init(&task_lk, "tasks lock");
     current_task = (task_t **) pmm -> alloc(sizeof(task_t *) * cpu_count());
     schedule_context = (Context **) pmm -> alloc(sizeof(Context *) * cpu_count());
     panic_on(!current_task, "there is no space");
     panic_on(!schedule_context, "there is no space");
+
     for (int cpu = 0; cpu < cpu_count(); cpu++) {
         task_t *task = (task_t *)pmm -> alloc(sizeof(task_t));
         panic_on(!task, "there is no space");
+
         char name[] = "this is the cpu 0";
         name[16] = name[16] + cpu;
         strcpy(task -> name, name);
+
         Area stack = (Area) {&(task -> stack), &(task -> stack) + 1};
         task -> context = kcontext(stack, idle_entry, NULL);
+
         task -> round = KMT_INIT_ROUND;
+
         task -> status = WAIT_TO_LOAD;
+
         task -> next = task -> prev = task;
+
         for (int i = 0; i < KMT_FENCE_SIZE; i++) {
             task -> fence1[i] = task -> fence2[i] = KMT_FENCE;
         }
@@ -270,9 +281,9 @@ static void kmt_init() {
         check_static_fence(task);
     }
 
-    for (int cpu = 1; cpu < cpu_count(); cpu++) {
+    for (int cpu = 0; cpu < cpu_count(); cpu++) {
         kmt -> spin_lock(&task_lk);
-        list_insert(current_task[0], current_task[cpu]);
+        list_insert(&task_head, current_task[cpu]);
         kmt -> spin_unlock(&task_lk);
     }
     os -> on_irq(INT32_MIN, EVENT_NULL, kmt_save_context);
@@ -284,13 +295,98 @@ static void kmt_init() {
     printf("kmt init finished");
 
 
+}
 
+static void list_add(task_t *head, task_t *task) {
+    panic_on(!head, "wait list head is NULL");
+    panic_on(!task, "the task added to wait_list is NULL");
+    task_t *p = NULL;
+    for (p = head; p -> next != head; p = p -> next);
+    assert(p);
+    p -> next -> prev = task;
+    task -> next = p -> next;
+    task -> prev = p;
+    p -> next = task;
 
 }
+
+static task_t *list_delete(task_t *head) {
+    panic_on(!head, "wait list head is NULL");
+    task_t *p = NULL;
+    p = head -> prev;
+    assert(p);
+    if (p == head) {
+        head = NULL;
+    } else {
+        head -> prev = p -> prev;
+        p -> prev -> next = head;
+        p -> next = NULL;
+        p -> prev = NULL;
+    }
+    return p;
+
+}
+
+static bool empty(task_t *head) {
+    return head == NULL;
+}
+static void kmt_enqueue(task_t *head, task_t *task) {
+    assert(task);
+    if (!head) {
+        head = task;
+        assert(head);
+    } else {
+        list_add(head, task);
+    }
+    
+}
+
+static task_t *kmt_dequeue(task_t *head) {
+    return list_delete(head);
+}
+static void kmt_sem_init(sem_t *sem, const char *name, int value) {
+    assert(sem);
+    strcpy(sem -> name, name);
+    sem -> count = value;
+    kmt -> spin_init(&(sem -> lock), name);
+
+}
+static void kmt_sem_wait(sem_t *sem) {
+    int count = 0;
+    int cpu = cpu_current();
+    task_t *task = current_task[cpu];
+    kmt -> spin_lock(&(sem -> lock));
+    sem -> count--;
+    count = sem -> count;
+    if (count < 0) {
+        kmt_enqueue(sem -> wait_list, task);
+        task -> status = WAIT_TO_WAKE_AND_SCHEDULE;
+    }
+    kmt -> spin_unlock(&(sem -> lock));
+    if (count < 0) {
+        yield();
+    }
+
+}
+static void kmt_sem_signal(sem_t *sem) {
+    kmt -> spin_lock(&(sem -> lock));
+    sem -> count++;
+    if (!empty(sem -> wait_list)) {
+
+        task_t *task = kmt_dequeue(sem -> wait_list);
+        task -> status = WAIT_TO_SCHEDULE;
+
+    }
+    kmt -> spin_unlock(&(sem -> lock));
+}
+
 MODULE_DEF(kmt) = {
     .init = kmt_init,
     .spin_init = kmt_spin_init,
     .spin_lock = kmt_spin_lock,
     .spin_unlock = kmt_spin_unlock,
     .create = kmt_create,
+    .sem_init = kmt_sem_init,
+    .sem_wait = kmt_sem_wait,
+    .sem_signal = kmt_sem_signal,
 };
