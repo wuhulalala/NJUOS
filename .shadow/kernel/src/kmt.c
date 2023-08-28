@@ -297,7 +297,7 @@ static void kmt_init() {
     os -> on_irq(YIELD_SEQ, EVENT_YIELD, irq_yield_handler);
 
 
-    printf("kmt init finished");
+    //printf("kmt init finished");
 
 
 }
