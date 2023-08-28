@@ -26,7 +26,7 @@ static void list_insert(task_t *head, task_t *task) {
 
 //}
 static void idle_entry(void *arg) {
-  printf("Hello World\n");
+  //printf("Hello World\n");
   device_t *tty = dev->lookup(arg);
   char cmd[128], resp[128], ps[16];
   snprintf(ps, 16, "(%s) $ ", arg);
