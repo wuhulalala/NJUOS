@@ -216,6 +216,11 @@ void kmt_schedule() {
 }
 
 
+task_t *task_alloc() {
+    task_t *task = (task_t*)pmm -> alloc(sizeof(task_t));
+    panic_on(!task, "there is no space");
+    return task;
+}
 
 static int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), void *arg) {
     if (!task || !entry) {
