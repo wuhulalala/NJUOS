@@ -227,7 +227,7 @@ static int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), 
         return 1;
     }
     strcpy(task -> name, name);
-    Area stack = (Area) {&task -> stack, &task -> stack + KMT_STACK_SIZE};
+    Area stack = (Area) {&(task -> stack), (&task -> stack) + 1};
     task -> context = kcontext(stack, entry, arg);
     task -> round = KMT_INIT_ROUND;
     task -> status = READY;
