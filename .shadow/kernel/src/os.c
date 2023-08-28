@@ -8,6 +8,7 @@ task_t *task_alloc();
 
 
 static void tty_reader(void *arg) {
+  printf("Hello World\n");
   device_t *tty = dev->lookup(arg);
   char cmd[128], resp[128], ps[16];
   snprintf(ps, 16, "(%s) $ ", arg);
