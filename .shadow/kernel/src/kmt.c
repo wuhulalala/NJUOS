@@ -105,7 +105,7 @@ Context *irq_time_handler(Event ev, Context *context) {
     {
     case RUNNING:
 
-        printf("hello world\n");
+        //printf("hello world\n");
         if (--(task -> round) < 0) 
             task -> status = WAIT_TO_SCHEDULE;
 
