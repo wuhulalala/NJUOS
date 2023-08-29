@@ -47,6 +47,10 @@ struct spinlock {
 
 struct semaphore {
   // TODO
+  char name[NAME_LEN];
+  spinlock_t lock;
+  int count; 
+  task_t *wait_list;
 };
 
 typedef struct irq {
@@ -61,4 +65,5 @@ Context **schedule_context;
 task_t *tasks;
 spinlock_t irq_lk;
 spinlock_t task_lk;
+task_t task_head;
 #endif

@@ -1,10 +1,16 @@
-#include <common.h>
 #include <os.h>
+#include <common.h>
 extern spinlock_t irq_lk;
 void kmt_schedule();
+
+
+
+
+
 static void os_init() {
   pmm -> init();
   kmt -> init();
+  
 }
 
 static IRQ irq = {
@@ -53,6 +59,7 @@ static void os_on_irq(int seq, int event, handler_t handler) {
   p -> next = node;
   kmt -> spin_unlock(&irq_lk);
 }
+
 
 MODULE_DEF(os) = {
   .init = os_init,

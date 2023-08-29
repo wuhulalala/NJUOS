@@ -41,7 +41,7 @@ compileSlab: git
              -o build/test
 
 debug:
-	qemu-system-x86_64 -s -S -serial mon:stdio -machine accel=tcg -smp 8 -drive format=raw,file=/home/liscopye/NJUOS/os-workbench/kernel/build/kernel-x86_64-qemu &
+	qemu-system-x86_64 -s -S -serial mon:stdio -machine accel=tcg -smp 1 -drive format=raw,file=/home/liscopye/NJUOS/os-workbench/kernel/build/kernel-x86_64-qemu &
 	gdb -x init.gdb
 testLock:
 	qemu-system-x86_64  -nographic -serial mon:stdio -machine accel=tcg -smp 4  -drive format=raw,file=/home/liscopye/NJUOS/os-workbench/kernel/build/kernel-x86_64-qemu 
