@@ -2,7 +2,6 @@
 #include <os.h>
 #include <devices.h>
 
-static void list_add(task_t *head, task_t *task);
 static void list_insert(task_t *head, task_t *task) {
     panic_on(atomic_xchg(&(task_lk.lock), KMT_LOCK) == KMT_UNLOCK, "error, the lock is not acquired");
     assert(head);
@@ -248,7 +247,7 @@ static int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), 
     }
     check_static_fence(task);
     kmt -> spin_lock(&task_lk);
-    list_add(&task_head, task);
+    list_insert(&task_head, task);
     kmt -> spin_unlock(&task_lk);
     return 0;
 }
