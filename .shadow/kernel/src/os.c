@@ -10,6 +10,7 @@ void kmt_schedule();
 static void os_init() {
   pmm -> init();
   kmt -> init();
+  dev -> init();
   
 }
 
