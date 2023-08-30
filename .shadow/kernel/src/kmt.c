@@ -251,6 +251,7 @@ static int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), 
     task -> context = kcontext(stack, entry, arg);
     task -> round = KMT_INIT_ROUND;
     task -> status = READY;
+    task -> sem_next = task -> sem_prev = task;
     for (int i = 0; i < KMT_FENCE_SIZE; i++) {
         task -> fence1[i] = task -> fence2[i] = KMT_FENCE;
     }
@@ -297,7 +298,7 @@ static void kmt_init() {
 
         task -> status = WAIT_TO_LOAD;
 
-        task -> next = task -> prev = task;
+        task -> sem_next = task -> sem_prev = task;
 
         for (int i = 0; i < KMT_FENCE_SIZE; i++) {
             task -> fence1[i] = task -> fence2[i] = KMT_FENCE;
@@ -327,27 +328,28 @@ static void list_add(task_t *head, task_t *task) {
     panic_on(!head, "wait list head is NULL");
     panic_on(!task, "the task added to wait_list is NULL");
     task_t *p = NULL;
-    for (p = head; p -> next != head; p = p -> next);
+    for (p = head; p -> sem_next != head; p = p -> sem_next);
     assert(p);
-    p -> next -> prev = task;
-    task -> next = p -> next;
-    task -> prev = p;
-    p -> next = task;
+    p -> sem_next -> sem_prev = task;
+    task -> sem_next = p -> sem_next;
+    task -> sem_prev = p;
+    p -> sem_next = task;
 
 }
 
 static task_t *list_delete(task_t *head) {
     panic_on(!head, "wait list head is NULL");
     task_t *p = NULL;
-    p = head -> prev;
+    p = head -> sem_next;
     assert(p);
     if (p == head) {
         head = NULL;
     } else {
-        head -> prev = p -> prev;
-        p -> prev -> next = head;
-        p -> next = NULL;
-        p -> prev = NULL;
+        head -> sem_prev -> sem_next = head -> sem_next;
+        head -> sem_next -> sem_prev = head -> sem_prev;
+        p = head;
+        head = head -> sem_next;
+
     }
     return p;
 
@@ -395,9 +397,11 @@ static void kmt_sem_wait(sem_t *sem) {
 
 }
 static void kmt_sem_signal(sem_t *sem) {
+    int count = 0;
     kmt -> spin_lock(&(sem -> lock));
     sem -> count++;
-    if (!empty(sem -> wait_list)) {
+    count = sem -> count;
+    if (!empty(sem -> wait_list) && count > 0) {
 
         task_t *task = kmt_dequeue(sem -> wait_list);
         task -> status = READY;

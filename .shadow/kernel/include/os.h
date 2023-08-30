@@ -34,6 +34,7 @@ struct task {
   int round;
   Context *context;
   task_t *next, *prev;
+  task_t *sem_next, *sem_prev;
   uint32_t fence1[KMT_FENCE_SIZE];
   uint8_t stack[KMT_STACK_SIZE];
   uint32_t fence2[KMT_FENCE_SIZE];
