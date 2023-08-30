@@ -198,6 +198,7 @@ void dev_input_task(void *args) {
 
   while (1) {
     printf("%s\n", task -> name);
+    printf("%d\n", task -> status);
     check_static_fence(task);
     uint32_t time;
     AM_INPUT_KEYBRD_T key;
