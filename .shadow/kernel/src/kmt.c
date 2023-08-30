@@ -39,6 +39,7 @@ static void idle_entry(void *arg) {
     //tty->ops->write(tty, 0, resp, strlen(resp));
   //}
   while (1) {
+    printf("Hello from cpu %d\n", cpu_current());
     yield();
 
   }
