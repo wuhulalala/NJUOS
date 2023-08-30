@@ -400,7 +400,7 @@ static void kmt_sem_signal(sem_t *sem) {
     if (!empty(sem -> wait_list)) {
 
         task_t *task = kmt_dequeue(sem -> wait_list);
-        task -> status = WAIT_TO_SCHEDULE;
+        task -> status = READY;
 
     }
     kmt -> spin_unlock(&(sem -> lock));
