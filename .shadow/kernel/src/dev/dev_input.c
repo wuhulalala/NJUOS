@@ -192,7 +192,7 @@ static void check_static_fence(task_t *task) {
 void dev_input_task(void *args) {
   int cpu = cpu_current();
   task_t *task = current_task[cpu];
-  printf("%s\n", task -> name);
+  //printf("%s\n", task -> name);
   device_t *in = dev->lookup("input");
   uint32_t known_time = io_read(AM_TIMER_UPTIME).us;
 
