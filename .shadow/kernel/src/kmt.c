@@ -386,11 +386,10 @@ static void kmt_sem_wait(sem_t *sem) {
     int cpu = cpu_current();
     task_t *task = current_task[cpu];
     kmt -> spin_lock(&(sem -> lock));
-    printf("++ ");
-    printf("%s\n", sem -> name);
     sem -> count--;
     count = sem -> count;
     if (count < 0) {
+        printf("++ %s\n", sem -> name);
         kmt_enqueue(sem -> wait_list, task);
         task -> status = WAIT_TO_WAKE_AND_SCHEDULE;
     }
@@ -403,12 +402,11 @@ static void kmt_sem_wait(sem_t *sem) {
 static void kmt_sem_signal(sem_t *sem) {
     int count = 0;
     kmt -> spin_lock(&(sem -> lock));
-    printf("-- ");
-    printf("%s\n", sem -> name);
     sem -> count++;
     count = sem -> count;
     if (!empty(sem -> wait_list) && count > 0) {
 
+        printf("-- %s\n", sem -> name);
         task_t *task = kmt_dequeue(sem -> wait_list);
         task -> status = READY;
 
