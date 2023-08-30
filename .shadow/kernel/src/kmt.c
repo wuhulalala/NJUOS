@@ -38,7 +38,10 @@ static void idle_entry(void *arg) {
     //sprintf(resp, "tty reader task: got %d character(s).\n", strlen(cmd));
     //tty->ops->write(tty, 0, resp, strlen(resp));
   //}
-  yield();
+  while (1) {
+    yield();
+
+  }
 }
 
 static void check_static_fence(task_t *task);
