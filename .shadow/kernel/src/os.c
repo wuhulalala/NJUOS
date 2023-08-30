@@ -25,7 +25,7 @@ static void os_run() {
 }
 
 static Context * os_trap(Event ev, Context *context) {
-  panic_on(ienabled() != false, "interrupt do not closed");
+  panic_on(ienabled() == true, "interrupt do not closed");
   Context *next = NULL;
   for (IRQ *h = irq.next; h != NULL; h = h -> next) {
     if (h -> event == EVENT_NULL || h -> event == ev.event) {

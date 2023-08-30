@@ -249,6 +249,7 @@ static int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), 
     kmt -> spin_lock(&task_lk);
     list_insert(&task_head, task);
     kmt -> spin_unlock(&task_lk);
+    check_static_fence(task);
     return 0;
 }
 

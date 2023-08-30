@@ -13,6 +13,9 @@
 #define KMT_FENCE_SIZE 2
 #define KMT_STACK_SIZE (8192)
 #define KMT_INIT_ROUND 10
+#define uaf_check(ptr) \
+  panic_on(KMT_FENCE == *(uint32_t *)(ptr), "use-after-free");
+
 
 #define TIME_SEQ 0
 #define YIELD_SEQ 1
