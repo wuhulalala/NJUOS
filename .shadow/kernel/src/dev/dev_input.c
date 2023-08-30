@@ -195,6 +195,7 @@ void dev_input_task(void *args) {
   printf("%s\n", task -> name);
   check_static_fence(task);
   device_t *in = dev->lookup("input");
+  check_static_fence(task);
   uint32_t known_time = io_read(AM_TIMER_UPTIME).us;
 
   while (1) {

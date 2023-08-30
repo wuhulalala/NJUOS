@@ -279,8 +279,11 @@ void dev_tty_task(void *arg) {
   printf("%s\n", task -> name);
   check_static_fence(task);
   device_t *in =     dev->lookup("input");
+  check_static_fence(task);
   device_t *ttydev = dev->lookup("tty1");
+  check_static_fence(task);
   device_t *fb =     dev->lookup("fb");
+  check_static_fence(task);
 
   tty_mark_all(ttydev->ptr);
   tty_render(ttydev->ptr);
