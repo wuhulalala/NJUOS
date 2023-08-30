@@ -199,6 +199,7 @@ static void check_static_fence(task_t *task) {
 void kmt_schedule() {
     int cpu = cpu_current();
     while (1) {
+        panic_on(ienabled() == true, "interrupt do not closed");
         yield();
 
         kmt -> spin_lock(&task_lk);
