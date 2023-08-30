@@ -197,8 +197,8 @@ void dev_input_task(void *args) {
   uint32_t known_time = io_read(AM_TIMER_UPTIME).us;
 
   while (1) {
-    printf("%s\n", task -> name);
-    printf("%d\n", task -> status);
+    //printf("%s\n", task -> name);
+    //printf("%d\n", task -> status);
     check_static_fence(task);
     uint32_t time;
     AM_INPUT_KEYBRD_T key;
