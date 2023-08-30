@@ -265,7 +265,19 @@ devops_t tty_ops = {
 // tty daemon
 // ------------------------------------------------------------------
 
+static void check_static_fence(task_t *task) {
+    panic_on(!task, "NULL task");
+    for (int i = 0; i < KMT_FENCE_SIZE; i++) {
+        panic_on(task -> fence1[i] != KMT_FENCE, "fence1 is broken");
+        panic_on(task -> fence2[i] != KMT_FENCE, "fence2 is broken");
+
+    }
+}
 void dev_tty_task(void *arg) {
+  int cpu = cpu_current();
+  task_t *task = current_task[cpu];
+  printf("%s\n", task -> name);
+  check_static_fence(task);
   device_t *in =     dev->lookup("input");
   device_t *ttydev = dev->lookup("tty1");
   device_t *fb =     dev->lookup("fb");
