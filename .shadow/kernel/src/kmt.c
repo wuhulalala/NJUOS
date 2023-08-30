@@ -222,6 +222,7 @@ void kmt_schedule() {
         while (p -> status != READY || p == &task_head) {
             p = p -> next;
         }
+        printf("name : %s", task -> name);
         p -> round = KMT_INIT_ROUND;
         p -> status = WAIT_TO_LOAD;
         check_static_fence(p);
