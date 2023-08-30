@@ -203,7 +203,7 @@ void kmt_schedule() {
         yield();
 
         kmt -> spin_lock(&task_lk);
-        printf("i am schedule\n");
+        //printf("i am schedule\n");
         task_t *task = current_task[cpu];
         switch (task -> status)
         {
@@ -220,11 +220,11 @@ void kmt_schedule() {
 
         task_t *p = task -> next;
         while (p -> status != READY || p == &task_head) {
-            printf("name : %s\n", p -> name);
-            printf("status : %d\n", p -> status);
+            //printf("name : %s\n", p -> name);
+            //printf("status : %d\n", p -> status);
             p = p -> next;
         }
-        printf("======================================================\n");
+        //printf("======================================================\n");
         p -> round = KMT_INIT_ROUND;
         p -> status = WAIT_TO_LOAD;
         check_static_fence(p);
@@ -384,6 +384,7 @@ static void kmt_sem_wait(sem_t *sem) {
     int cpu = cpu_current();
     task_t *task = current_task[cpu];
     kmt -> spin_lock(&(sem -> lock));
+    printf("%s\n", sem -> name);
     sem -> count--;
     count = sem -> count;
     if (count < 0) {
