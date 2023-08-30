@@ -203,6 +203,7 @@ void kmt_schedule() {
         yield();
 
         kmt -> spin_lock(&task_lk);
+        printf("i am schedule\n");
         task_t *task = current_task[cpu];
         switch (task -> status)
         {
