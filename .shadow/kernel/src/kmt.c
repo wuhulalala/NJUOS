@@ -221,8 +221,8 @@ void kmt_schedule() {
 
         task_t *p = task -> next;
         while (p -> status != READY || p == &task_head) {
-            //printf("name : %s\n", p -> name);
-            //printf("status : %d\n", p -> status);
+            printf("name : %s\n", p -> name);
+            printf("status : %d\n", p -> status);
             p = p -> next;
         }
         //printf("======================================================\n");
