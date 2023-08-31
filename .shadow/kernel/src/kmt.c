@@ -223,6 +223,7 @@ void kmt_schedule() {
             task -> status = WAIT_TO_WAKE;
             break;
         default:
+            printf("task -> status : %d\n", task -> status);
             panic("error status");
         }
 
