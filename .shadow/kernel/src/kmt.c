@@ -74,7 +74,6 @@ Context *kmt_save_context(Event ev, Context *context) {
     int cpu = cpu_current();
     task_t *task = current_task[cpu];
     assert(task);
-    kmt -> spin_lock(&task_lk);
     switch (task -> status)
     {
     case RUNNING:
@@ -93,7 +92,6 @@ Context *kmt_save_context(Event ev, Context *context) {
     default:
         panic("error status");
     }
-    kmt -> spin_unlock(&task_lk);
     return NULL;
 
 }
@@ -106,7 +104,6 @@ Context *irq_time_handler(Event ev, Context *context) {
     panic_on(!task, "NULL task");
     panic_on(ev.event != EVENT_IRQ_TIMER, "Not timer interrupt");
 
-    kmt -> spin_lock(&task_lk);
     switch (task -> status)
     {
     case RUNNING:
@@ -125,7 +122,6 @@ Context *irq_time_handler(Event ev, Context *context) {
     default:
         panic("error status");
     }
-    kmt -> spin_unlock(&task_lk);
     return NULL;
 
 }
@@ -138,7 +134,6 @@ Context *irq_yield_handler(Event ev, Context *context) {
     panic_on(!task, "NULL task");
     panic_on(ev.event != EVENT_YIELD, "Not timer interrupt");
 
-    kmt -> spin_lock(&task_lk);
     switch (task -> status)
     {
     case RUNNING:
@@ -158,7 +153,6 @@ Context *irq_yield_handler(Event ev, Context *context) {
     default:
         panic("error status");
     }
-    kmt -> spin_unlock(&task_lk);
     return NULL;
 }
 
@@ -170,7 +164,6 @@ Context *kmt_load_context(Event en, Context * context) {
     panic_on(!task, "NULL task");
 
     Context *next = NULL;
-    kmt -> spin_lock(&task_lk);
     switch (task -> status)
     {
     case RUNNING:
@@ -190,7 +183,6 @@ Context *kmt_load_context(Event en, Context * context) {
         panic("error status");
     }
     panic_on(!next, "NULL context next");
-    kmt -> spin_unlock(&task_lk);
     check_static_fence(task);
     return next;
 }
