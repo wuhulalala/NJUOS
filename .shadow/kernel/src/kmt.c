@@ -214,8 +214,6 @@ void kmt_schedule() {
         case WAIT_TO_WAKE_AND_SCHEDULE:
             task -> status = WAIT_TO_WAKE;
             break;
-        case READY:
-            break;
         default:
             printf("task -> status : %d\n", task -> status);
             panic("error status");
@@ -412,7 +410,7 @@ static void kmt_sem_signal(sem_t *sem) {
 
         printf("-- %s\n", sem -> name);
         task_t *task = kmt_dequeue(&(sem -> wait_list));
-        task -> status = READY;
+        task -> status = WAIT_TO_SCHEDULE;
 
     }
     kmt -> spin_unlock(&(sem -> lock));
