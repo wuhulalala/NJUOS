@@ -418,7 +418,7 @@ static void kmt_sem_signal(sem_t *sem) {
 
         printf("-- %s\n", sem -> name);
         task_t *task = kmt_dequeue(&(sem -> wait_list));
-        task -> status = READY;
+        task -> status = WAIT_TO_SCHEDULE;
 
     }
     kmt -> spin_unlock(&(sem -> lock));
