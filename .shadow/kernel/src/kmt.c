@@ -406,7 +406,7 @@ static void kmt_sem_signal(sem_t *sem) {
     kmt -> spin_lock(&(sem -> lock));
     sem -> count++;
     count = sem -> count;
-    if (!empty(sem -> wait_list) && count > 0) {
+    if (!empty(sem -> wait_list) && count >= 0) {
 
         printf("-- %s\n", sem -> name);
         task_t *task = kmt_dequeue(&(sem -> wait_list));

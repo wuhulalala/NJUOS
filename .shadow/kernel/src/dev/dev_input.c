@@ -180,26 +180,14 @@ static char keymap[256][2] = {
 // input daemon
 // ------------------------------------------------------------------
 
-static void check_static_fence(task_t *task) {
-    panic_on(!task, "NULL task");
-    for (int i = 0; i < KMT_FENCE_SIZE; i++) {
-        panic_on(task -> fence1[i] != KMT_FENCE, "fence1 is broken");
-        panic_on(task -> fence2[i] != KMT_FENCE, "fence2 is broken");
-
-    }
-}
 
 void dev_input_task(void *args) {
-  int cpu = cpu_current();
-  task_t *task = current_task[cpu];
-  //printf("%s\n", task -> name);
   device_t *in = dev->lookup("input");
   uint32_t known_time = io_read(AM_TIMER_UPTIME).us;
 
   while (1) {
     //printf("%s\n", task -> name);
     //printf("%d\n", task -> status);
-    check_static_fence(task);
     uint32_t time;
     AM_INPUT_KEYBRD_T key;
     while ((key = io_read(AM_INPUT_KEYBRD)).keycode != 0) {
