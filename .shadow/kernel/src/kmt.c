@@ -339,20 +339,14 @@ static void list_add(task_t *head, task_t *task) {
 
 }
 
-static task_t *list_delete(task_t *head) {
-    panic_on(!head, "wait list head is NULL");
+static task_t *list_delete(task_t **head) {
+    panic_on(!(*head), "wait list head is NULL");
     task_t *p = NULL;
-    p = head -> sem_next;
-    assert(p);
-    if (p == head) {
-        head = NULL;
-    } else {
-        head -> sem_prev -> sem_next = head -> sem_next;
-        head -> sem_next -> sem_prev = head -> sem_prev;
-        p = head;
-        head = head -> sem_next;
+    (*head) -> sem_prev -> sem_next = (*head) -> sem_next;
+    (*head) -> sem_next -> sem_prev = (*head) -> sem_prev;
+    p = *head;
+    *head = (*head) -> sem_next;
 
-    }
     return p;
 
 }
@@ -360,25 +354,34 @@ static task_t *list_delete(task_t *head) {
 static bool empty(task_t *head) {
     return head == NULL;
 }
-static void kmt_enqueue(task_t *head, task_t *task) {
+static void kmt_enqueue(task_t **head, task_t *task) {
     assert(task);
-    if (!head) {
-        head = task;
+    if (!(*head)) {
+        *head = task;
         assert(head);
     } else {
-        list_add(head, task);
+        list_add(*head, task);
     }
     
 }
 
-static task_t *kmt_dequeue(task_t *head) {
-    return list_delete(head);
+static task_t *kmt_dequeue(task_t **head) {
+    panic_on(!(*head), "NULL queue");
+    task_t *task = NULL;
+    if ((*head) -> sem_next == *head) {
+        task = *head; 
+        *head = NULL;
+    } else {
+        task = list_delete(head);
+    }
+    return task;
 }
 static void kmt_sem_init(sem_t *sem, const char *name, int value) {
     assert(sem);
     strcpy(sem -> name, name);
     sem -> count = value;
     kmt -> spin_init(&(sem -> lock), name);
+    sem -> wait_list = NULL;
 
 }
 static void kmt_sem_wait(sem_t *sem) {
@@ -390,7 +393,7 @@ static void kmt_sem_wait(sem_t *sem) {
     count = sem -> count;
     if (count < 0) {
         printf("++ %s\n", sem -> name);
-        kmt_enqueue(sem -> wait_list, task);
+        kmt_enqueue(&(sem -> wait_list), task);
         task -> status = WAIT_TO_WAKE_AND_SCHEDULE;
     }
     kmt -> spin_unlock(&(sem -> lock));
@@ -407,7 +410,7 @@ static void kmt_sem_signal(sem_t *sem) {
     if (!empty(sem -> wait_list) && count > 0) {
 
         printf("-- %s\n", sem -> name);
-        task_t *task = kmt_dequeue(sem -> wait_list);
+        task_t *task = kmt_dequeue(&(sem -> wait_list));
         task -> status = READY;
 
     }
