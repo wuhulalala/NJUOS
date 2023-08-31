@@ -41,7 +41,7 @@ static void idle_entry(void *arg) {
   while (1) {
     //printf("cpu count is %d\n", cpu_count());
     //printf("Hello from cpu %d\n", cpu_current());
-
+    yield();
   }
 }
 
