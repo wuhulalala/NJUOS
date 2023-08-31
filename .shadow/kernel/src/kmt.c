@@ -74,6 +74,7 @@ Context *kmt_save_context(Event ev, Context *context) {
     int cpu = cpu_current();
     task_t *task = current_task[cpu];
     assert(task);
+    kmt -> spin_lock(&task_lk);
     switch (task -> status)
     {
     case RUNNING:
@@ -92,6 +93,7 @@ Context *kmt_save_context(Event ev, Context *context) {
     default:
         panic("error status");
     }
+    kmt -> spin_unlock(&task_lk);
     return NULL;
 
 }
