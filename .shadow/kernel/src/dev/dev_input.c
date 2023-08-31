@@ -86,7 +86,6 @@ static void input_keydown(device_t *dev, AM_INPUT_KEYBRD_T key) {
 }
 
 static Context *input_notify(Event ev, Context *context) {
-  printf("keyboard irq\n");
   kmt->sem_signal(&sem_kbdirq);
   return NULL;
 }
@@ -206,6 +205,7 @@ void dev_input_task(void *args) {
     while ((key = io_read(AM_INPUT_KEYBRD)).keycode != 0) {
       input_keydown(in, key);
     }
+    printf("the keydown is %d\n", key);
     time = io_read(AM_TIMER_UPTIME).us;
     if ((time - known_time) / 1000 > 100 && is_empty(in->ptr)) {
       push_event(in->ptr, event(0, 0, 0));
