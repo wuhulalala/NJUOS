@@ -12,7 +12,10 @@
 #define KMT_FENCE (0x17377199)
 #define KMT_FENCE_SIZE 2
 #define KMT_STACK_SIZE (8192)
-#define KMT_INIT_ROUND 1
+#define KMT_INIT_ROUND 10
+#define uaf_check(ptr) \
+  panic_on(KMT_FENCE == *(uint32_t *)(ptr), "use-after-free");
+
 
 #define TIME_SEQ 0
 #define YIELD_SEQ 1
@@ -31,6 +34,7 @@ struct task {
   int round;
   Context *context;
   task_t *next, *prev;
+  task_t *sem_next, *sem_prev;
   uint32_t fence1[KMT_FENCE_SIZE];
   uint8_t stack[KMT_STACK_SIZE];
   uint32_t fence2[KMT_FENCE_SIZE];

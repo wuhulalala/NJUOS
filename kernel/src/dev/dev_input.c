@@ -180,11 +180,14 @@ static char keymap[256][2] = {
 // input daemon
 // ------------------------------------------------------------------
 
+
 void dev_input_task(void *args) {
   device_t *in = dev->lookup("input");
   uint32_t known_time = io_read(AM_TIMER_UPTIME).us;
 
   while (1) {
+    //printf("%s\n", task -> name);
+    //printf("%d\n", task -> status);
     uint32_t time;
     AM_INPUT_KEYBRD_T key;
     while ((key = io_read(AM_INPUT_KEYBRD)).keycode != 0) {
