@@ -206,10 +206,10 @@ void kmt_schedule() {
 
         kmt -> spin_lock(&task_lk);
         //printf("i am schedule\n");
-        task_t *tmp = task_head.next;
-        for (;tmp != &task_head; tmp = tmp -> next) {
-            printf("task name is %s\n", tmp -> name);
-        }
+        //task_t *tmp = task_head.next;
+        //for (;tmp != &task_head; tmp = tmp -> next) {
+            //printf("task name is %s\n", tmp -> name);
+        //}
         task_t *task = current_task[cpu];
         switch (task -> status)
         {
@@ -258,7 +258,7 @@ static int kmt_create(task_t *task, const char *name, void (*entry)(void *arg), 
     Area stack = (Area) {&(task -> stack), (&task -> stack) + 1};
     task -> context = kcontext(stack, entry, arg);
     task -> round = KMT_INIT_ROUND;
-    task -> status = READY;
+    task -> status = WAIT_TO_LOAD;
     task -> sem_next = task -> sem_prev = task;
     for (int i = 0; i < KMT_FENCE_SIZE; i++) {
         task -> fence1[i] = task -> fence2[i] = KMT_FENCE;
