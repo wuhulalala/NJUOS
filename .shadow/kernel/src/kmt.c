@@ -427,7 +427,7 @@ static void kmt_sem_signal(sem_t *sem) {
         task_t *task = kmt_dequeue(&(sem -> wait_list));
         kmt -> spin_lock(&task_lk);
         if (task -> status == WAIT_TO_WAKE_AND_SCHEDULE) {
-            task -> status = RUNNING;
+            task -> status = WAIT_TO_SCHEDULE;
         } else {
             task -> status = READY;
         }
