@@ -55,7 +55,7 @@ static void kmt_spin_lock(spinlock_t *lk) {
     bool interrupt_status = ienabled();
     iset(false);
 
-    while (atomic_xchg(&(lk -> lock), KMT_LOCK) == KMT_LOCK);
+    while (atomic_xchg(&(lk -> lock), KMT_LOCK) == KMT_LOCK){;}
 
     lk -> saved_interrupt_status = interrupt_status;
 }
@@ -72,6 +72,7 @@ static void kmt_spin_unlock(spinlock_t *lk) {
 Context *kmt_save_context(Event ev, Context *context) {
     panic_on(!context, "NULL context");
     int cpu = cpu_current();
+    kmt -> spin_lock(&task_lk);
     task_t *task = current_task[cpu];
     assert(task);
     switch (task -> status)
@@ -92,6 +93,7 @@ Context *kmt_save_context(Event ev, Context *context) {
     default:
         panic("error status");
     }
+    kmt -> spin_unlock(&task_lk);
     return NULL;
 
 }
@@ -100,6 +102,7 @@ Context *kmt_save_context(Event ev, Context *context) {
 Context *irq_time_handler(Event ev, Context *context) {
     panic_on(!context, "NULL context");
     int cpu = cpu_current();
+    kmt -> spin_lock(&task_lk);
     task_t *task = current_task[cpu];
     panic_on(!task, "NULL task");
     panic_on(ev.event != EVENT_IRQ_TIMER, "Not timer interrupt");
@@ -120,8 +123,11 @@ Context *irq_time_handler(Event ev, Context *context) {
         break;
 
     default:
+        printf("status is %s\n", task -> name);
+        printf("status is %d\n", task -> status);
         panic("error status");
     }
+    kmt -> spin_unlock(&task_lk);
     return NULL;
 
 }
@@ -130,6 +136,7 @@ Context *irq_time_handler(Event ev, Context *context) {
 Context *irq_yield_handler(Event ev, Context *context) {
     panic_on(!context, "NULL context");
     int cpu = cpu_current();
+    kmt -> spin_lock(&task_lk);
     task_t *task = current_task[cpu];
     panic_on(!task, "NULL task");
     panic_on(ev.event != EVENT_YIELD, "Not timer interrupt");
@@ -153,6 +160,7 @@ Context *irq_yield_handler(Event ev, Context *context) {
     default:
         panic("error status");
     }
+    kmt -> spin_unlock(&task_lk);
     return NULL;
 }
 
@@ -204,7 +212,12 @@ void kmt_schedule() {
 
         kmt -> spin_lock(&task_lk);
         //printf("i am schedule\n");
+        //task_t *tmp = task_head.next;
+        //for (;tmp != &task_head; tmp = tmp -> next) {
+            //printf("task name is %s\n", tmp -> name);
+        //}
         task_t *task = current_task[cpu];
+        task_t *p = task -> next;
         switch (task -> status)
         {
         case WAIT_TO_SCHEDULE:
@@ -214,18 +227,23 @@ void kmt_schedule() {
         case WAIT_TO_WAKE_AND_SCHEDULE:
             task -> status = WAIT_TO_WAKE;
             break;
+
+        case RUNNING:
+            p = task;
+            goto found;
         default:
             printf("task -> status : %d\n", task -> status);
+            printf("task -> name : %s\n", task -> name);
             panic("error status");
         }
 
-        task_t *p = task -> next;
         while (p -> status != READY || p == &task_head) {
             //printf("name : %s\n", p -> name);
             //printf("status : %d\n", p -> status);
             p = p -> next;
         }
         //printf("======================================================\n");
+    found:
         p -> round = KMT_INIT_ROUND;
         p -> status = WAIT_TO_LOAD;
         check_static_fence(p);
@@ -393,7 +411,9 @@ static void kmt_sem_wait(sem_t *sem) {
     if (count < 0) {
         printf("++ %s\n", sem -> name);
         kmt_enqueue(&(sem -> wait_list), task);
+        kmt -> spin_lock(&task_lk);
         task -> status = WAIT_TO_WAKE_AND_SCHEDULE;
+        kmt -> spin_unlock(&task_lk);
     }
     kmt -> spin_unlock(&(sem -> lock));
     if (count < 0) {
@@ -410,7 +430,23 @@ static void kmt_sem_signal(sem_t *sem) {
 
         printf("-- %s\n", sem -> name);
         task_t *task = kmt_dequeue(&(sem -> wait_list));
-        task -> status = WAIT_TO_SCHEDULE;
+        kmt -> spin_lock(&task_lk);
+        switch (task -> status)
+        {
+        case WAIT_TO_WAKE_AND_SCHEDULE:
+            task -> status = RUNNING;  
+
+            /* code */
+            break;
+        
+        case RUNNING:
+            break;
+
+        default:
+            task -> status = READY;
+            break;
+        }
+        kmt -> spin_unlock(&task_lk);
 
     }
     kmt -> spin_unlock(&(sem -> lock));

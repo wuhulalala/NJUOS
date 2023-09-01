@@ -70,7 +70,7 @@ static void os_on_irq(int seq, int event, handler_t handler) {
 
   IRQ *p = NULL;
   kmt -> spin_lock(&irq_lk);
-  for (p = &irq; p -> next != NULL && (p -> next) -> seq < seq; p = p -> next);
+  for (p = &irq; p -> next != NULL && (p -> next) -> seq <= seq; p = p -> next);
   assert(p);
   node -> next = p -> next;
   p -> next = node;
