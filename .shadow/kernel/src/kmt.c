@@ -104,6 +104,7 @@ Context *irq_time_handler(Event ev, Context *context) {
     panic_on(!task, "NULL task");
     panic_on(ev.event != EVENT_IRQ_TIMER, "Not timer interrupt");
 
+    kmt -> spin_lock(&task_lk);
     switch (task -> status)
     {
     case RUNNING:
@@ -124,6 +125,7 @@ Context *irq_time_handler(Event ev, Context *context) {
         printf("status is %d\n", task -> status);
         panic("error status");
     }
+    kmt -> spin_unlock(&task_lk);
     return NULL;
 
 }
@@ -136,6 +138,7 @@ Context *irq_yield_handler(Event ev, Context *context) {
     panic_on(!task, "NULL task");
     panic_on(ev.event != EVENT_YIELD, "Not timer interrupt");
 
+    kmt -> spin_lock(&task_lk);
     switch (task -> status)
     {
     case RUNNING:
@@ -155,6 +158,7 @@ Context *irq_yield_handler(Event ev, Context *context) {
     default:
         panic("error status");
     }
+    kmt -> spin_unlock(&task_lk);
     return NULL;
 }
 
