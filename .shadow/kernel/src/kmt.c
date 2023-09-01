@@ -427,7 +427,6 @@ static void kmt_sem_signal(sem_t *sem) {
 
         printf("-- %s\n", sem -> name);
         task_t *task = kmt_dequeue(&(sem -> wait_list));
-        kmt -> spin_lock(&task_lk);
         if (current_task[cpu] != task) {
             while(task -> status == WAIT_TO_WAKE) {
                 task -> status = READY;
@@ -435,7 +434,6 @@ static void kmt_sem_signal(sem_t *sem) {
         } else {
             task -> status = RUNNING;
         }
-        kmt -> spin_unlock(&task_lk);
 
     }
     kmt -> spin_unlock(&(sem -> lock));
