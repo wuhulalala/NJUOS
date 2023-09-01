@@ -222,6 +222,7 @@ void kmt_schedule() {
             break;
         default:
             printf("task -> status : %d\n", task -> status);
+            printf("task -> name : %s\n", task -> name);
             panic("error status");
         }
 
