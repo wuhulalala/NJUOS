@@ -121,7 +121,7 @@ Context *irq_time_handler(Event ev, Context *context) {
         break;
 
     default:
-        printf("status is %s\n", task -> status);
+        printf("status is %d\n", task -> status);
         panic("error status");
     }
     return NULL;
