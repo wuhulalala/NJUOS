@@ -90,6 +90,7 @@ Context *kmt_save_context(Event ev, Context *context) {
         break;
 
     default:
+        printf("status is %s\n", task -> status);
         panic("error status");
     }
     return NULL;
