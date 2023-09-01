@@ -90,7 +90,6 @@ Context *kmt_save_context(Event ev, Context *context) {
         break;
 
     default:
-        printf("status is %s\n", task -> status);
         panic("error status");
     }
     return NULL;
@@ -207,6 +206,10 @@ void kmt_schedule() {
 
         kmt -> spin_lock(&task_lk);
         //printf("i am schedule\n");
+        task_t *tmp = task_head.next;
+        for (;tmp != &task_head; tmp = tmp -> next) {
+            printf("task name is %s\n", tmp -> name);
+        }
         task_t *task = current_task[cpu];
         switch (task -> status)
         {
