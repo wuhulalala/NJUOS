@@ -55,7 +55,7 @@ static void kmt_spin_lock(spinlock_t *lk) {
     bool interrupt_status = ienabled();
     iset(false);
 
-    while (atomic_xchg(&(lk -> lock), KMT_LOCK) == KMT_LOCK);
+    while (atomic_xchg(&(lk -> lock), KMT_LOCK) == KMT_LOCK){;}
 
     lk -> saved_interrupt_status = interrupt_status;
 }
